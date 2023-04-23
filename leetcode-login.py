@@ -47,12 +47,29 @@ def switch_to_python():
 def problem_setup():
     # Setup default submission
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div[class=\"view-line\"]")))
+
+    # wait until there is more than 1 element in the code box
+    while len(driver.find_elements(By.CSS_SELECTOR, "div[class=\"view-line\"]")) < 2:
+        time.sleep(0.1)
+
     text="if (False): return"
-    code_box_divs = driver.find_elements(By.CSS_SELECTOR, "div[class=\"view-line\"]")
-    actions.move_to_element(code_box_divs[-1]).click().send_keys(Keys.END + Keys.ENTER + text).perform()
+    lines = wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "div[class='view-line']")))
+    last_line = lines[-1]
+    last_line.click()
+    driver.switch_to.active_element.send_keys(Keys.END + Keys.ENTER + text)
 
     # Submit
     driver.find_element(By.XPATH, "//button[text()='Submit']").click()
+    wait.until_not(EC.presence_of_element_located((By.CSS_SELECTOR, "div[data-e2e-locator=\"console-result\"]")))
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div[data-e2e-locator=\"console-result\"]")))
+
+def get_wrong_answer():
+    # Find the div that contains the text "Expected"
+    expected_div = driver.find_element(By.XPATH, "//div[contains(text(), 'Expected')]")
+    # Find the neighbor div using xpath
+    neighbor_div = expected_div.find_element(By.XPATH, "../div[2]/div/div/div")
+    correct_output = neighbor_div.text
+
 
 # Stores some paths to elements
 def get_element():
@@ -71,3 +88,4 @@ if __name__ == "__main__":
     switch_to_python()
     problem_setup()
     pause()
+    add_testcases()
