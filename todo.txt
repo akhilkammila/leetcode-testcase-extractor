@@ -1,0 +1,12 @@
+PRIORITY: handle large inputs, where leetcode does not show the entire testcase
+
+to-dos to make this problem run smoother + to help generalise:
+reset the code before starting OR
+have some logic to continue previous attempts
+check fully loading after switch to python by looking for words, not counting lines
+handle runtime exceptions and network errors
+
+to dos to generalize:
+handle string inputs
+store the testcase info in a file 
+automatically create problem solvers based on main page parsing
