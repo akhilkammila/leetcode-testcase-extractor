@@ -27,3 +27,4 @@ class ResultConsole:
     VARIABLE_DIV_XPATH = "//div[text()='{}']"
     EXPECTED_XPATH = "//div[text()='Expected']"
     FOLLOWING_DIV_TEXT_XPATH = ".//following-sibling::div" #finds child of subling, which has the input value
+    FOLLOWING_COPY_BUTTON_XPATH = "following::*[local-name()='svg']/.." #finds the copy button, which is a parent of the next svg element

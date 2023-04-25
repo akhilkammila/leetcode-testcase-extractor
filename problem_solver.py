@@ -1,6 +1,5 @@
 import time
-import random
-import platform
+import tkinter as tk
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -15,7 +14,7 @@ from locators import SingleProblemPage
 from locators import ResultConsole
 
 class ProblemSolver:
-    def __init__(self, prob_link, waitTime=30):
+    def __init__(self, prob_link, waitTime=20):
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
         self.wait = WebDriverWait(self.driver, waitTime)
@@ -61,7 +60,7 @@ class ProblemSolver:
         last_line.click()
         self.driver.switch_to.active_element.send_keys(Keys.END + Keys.ENTER + SingleProblemPage.DEFAULT_SUBMISSION)
     
-    def submit(self, pauseTime=4):
+    def submit(self, pauseTime=3):
         time.sleep(pauseTime)
         self.driver.find_element(By.XPATH, SingleProblemPage.SUBMIT_BUTTON_XPATH).click()
         self.wait.until_not(EC.presence_of_element_located((By.XPATH, ResultConsole.WRONG_ANSWER_XPATH)))
@@ -70,6 +69,7 @@ class ProblemSolver:
         code_submitted_too_soon = EC.presence_of_element_located((By.XPATH, ResultConsole.CODE_SUBMITTED_TOO_SOON_XPATH))
         self.wait.until(EC.any_of(wrong_answer_found, code_submitted_too_soon))
 
+        # Case: wrong answer (normal)
         try:
             self.driver.find_element(By.XPATH, ResultConsole.WRONG_ANSWER_XPATH)
         except:
@@ -77,14 +77,23 @@ class ProblemSolver:
             self.submit(pauseTime*1.5)
     
     def parse_testcase(self):
+        def copy_following_div(div):
+            possible_copies = div.find_elements(By.XPATH, ResultConsole.FOLLOWING_COPY_BUTTON_XPATH)
+            for copy in possible_copies:
+                if copy.text == '':
+                    copy.click()
+                    time.sleep(0.25)
+                    return root.clipboard_get()
+            return None
+
+        root = tk.Tk()
         testcase_inputs = []
         for var in self.variables:
             var_div = self.driver.find_elements(By.XPATH, ResultConsole.VARIABLE_DIV_XPATH.format(var))[-1]
-            var_input = var_div.find_element(By.XPATH, ResultConsole.FOLLOWING_DIV_TEXT_XPATH).text
-            testcase_inputs.append(var_input)
+            testcase_inputs.append(copy_following_div(var_div))
         
         expected_div = self.driver.find_element(By.XPATH, ResultConsole.EXPECTED_XPATH)
-        output = expected_div.find_element(By.XPATH, ResultConsole.FOLLOWING_DIV_TEXT_XPATH).text
+        output = copy_following_div(expected_div)
         
         conditionals = [a + " == " + b for a, b in zip(self.variables, testcase_inputs)]
         testcase_string = "if {}: return {}".format(" and ".join(conditionals), output)
