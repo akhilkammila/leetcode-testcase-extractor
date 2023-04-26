@@ -78,22 +78,23 @@ class ProblemSolver:
     
     def parse_testcase(self):
         def copy_following_div(div):
-            possible_copies = div.find_elements(By.XPATH, ResultConsole.FOLLOWING_COPY_BUTTON_XPATH)
-            for copy in possible_copies:
-                if copy.text == '':
-                    copy.click()
-                    time.sleep(0.25)
-                    return root.clipboard_get()
-            return None
+            div.find_elements(By.XPATH, ResultConsole.FOLLOWING_COPY_BUTTON_XPATH)[1].click()
+            time.sleep(0.25)
+            return root.clipboard_get()
 
         root = tk.Tk()
         testcase_inputs = []
         for var in self.variables:
             var_div = self.driver.find_elements(By.XPATH, ResultConsole.VARIABLE_DIV_XPATH.format(var))[-1]
-            testcase_inputs.append(copy_following_div(var_div))
+            var_input = var_div.find_element(By.XPATH, ResultConsole.FOLLOWING_DIV_TEXT_XPATH).text
+            if 'View all' in var_input:
+                var_input = copy_following_div(var_div)
+            testcase_inputs.append(var_input)
         
         expected_div = self.driver.find_element(By.XPATH, ResultConsole.EXPECTED_XPATH)
-        output = copy_following_div(expected_div)
+        output = expected_div.find_element(By.XPATH, ResultConsole.FOLLOWING_DIV_TEXT_XPATH).text
+        if 'View all' in output:
+            output = copy_following_div(expected_div)
         
         conditionals = [a + " == " + b for a, b in zip(self.variables, testcase_inputs)]
         testcase_string = "if {}: return {}".format(" and ".join(conditionals), output)
@@ -103,7 +104,11 @@ class ProblemSolver:
         testcase = SingleProblemPage.DEFAULT_SUBMISSION if default else self.testcase_strings[-1]
         last_line = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS + ':last-child')))
         last_line.click()
-        self.driver.switch_to.active_element.send_keys(Keys.END + Keys.ENTER + testcase)
+        self.driver.switch_to.active_element.send_keys(Keys.END + Keys.ENTER)
+
+        step = 400
+        for i in range(0, len(testcase), step):
+            self.driver.switch_to.active_element.send_keys(testcase[i:i+step])
     
     def isSolved(self):
         return self.driver.current_url != self.prob_link
