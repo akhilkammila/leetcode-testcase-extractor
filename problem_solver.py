@@ -1,5 +1,6 @@
 import time
 import tkinter as tk
+import pyperclip
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -32,13 +33,14 @@ class ProblemSolver:
         self.driver.find_element(By.ID, LoginPage.SIGN_IN_BUTTON_ID).click()
         self.wait.until_not(EC.title_is(LoginPage.TITLE))
 
-    def load_problem(self):
+    def load_problem(self, firstTime = True):
         self.driver.get(self.prob_link)
 
         # ensure full loading
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, SingleProblemPage.EDITOR_CSS)))
         self.wait.until(lambda driver : len(driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)) >= 2)
-        self.wait.until(EC.presence_of_element_located((By.XPATH, SingleProblemPage.CPP_BUTTON_XPATH)))
+        if firstTime:
+            self.wait.until(EC.presence_of_element_located((By.XPATH, SingleProblemPage.CPP_BUTTON_XPATH)))
     
     def switch_to_python(self):
         num_lines = len(self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS))
@@ -55,11 +57,6 @@ class ProblemSolver:
         self.variables = vars
         self.var_types = var_types
     
-    def setup_default_submission(self):
-        last_line = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS + ':last-child')))
-        last_line.click()
-        self.driver.switch_to.active_element.send_keys(Keys.END + Keys.ENTER + SingleProblemPage.DEFAULT_SUBMISSION)
-    
     def submit(self, pauseTime=3):
         time.sleep(pauseTime)
         self.driver.find_element(By.XPATH, SingleProblemPage.SUBMIT_BUTTON_XPATH).click()
@@ -67,12 +64,21 @@ class ProblemSolver:
  
         wrong_answer_found = EC.presence_of_element_located((By.XPATH, ResultConsole.WRONG_ANSWER_XPATH))
         code_submitted_too_soon = EC.presence_of_element_located((By.XPATH, ResultConsole.CODE_SUBMITTED_TOO_SOON_XPATH))
-        self.wait.until(EC.any_of(wrong_answer_found, code_submitted_too_soon))
+        network_error = EC.presence_of_element_located((By.XPATH, ResultConsole.NETWORK_ERROR_XPATH))
+        self.wait.until(EC.any_of(wrong_answer_found, code_submitted_too_soon, network_error))
 
-        # Case: wrong answer (normal)
+        # If there is a wrong answer(normal), we do nothing
         try:
             self.driver.find_element(By.XPATH, ResultConsole.WRONG_ANSWER_XPATH)
         except:
+            # If there is not a wrong answer, there are two cases
+            # 1. we find code submitted too soon, so we resubmit
+            # 2. we don't find it, so probably network error. reload, then resubmit
+            try:
+                self.driver.find_element(By.XPATH, ResultConsole.CODE_SUBMITTED_TOO_SOON_XPATH)
+            except:
+                self.load_problem(False)
+            
             print("errored, waiting")
             self.submit(pauseTime*1.5)
     
@@ -102,13 +108,11 @@ class ProblemSolver:
     
     def add_testcase(self, default = False):
         testcase = SingleProblemPage.DEFAULT_SUBMISSION if default else self.testcase_strings[-1]
-        last_line = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS + ':last-child')))
+        pyperclip.copy(testcase)
+        last_line = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS + ':nth-child(2)')))
         last_line.click()
         self.driver.switch_to.active_element.send_keys(Keys.END + Keys.ENTER)
-
-        step = 400
-        for i in range(0, len(testcase), step):
-            self.driver.switch_to.active_element.send_keys(testcase[i:i+step])
+        self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'v')
     
     def isSolved(self):
         return self.driver.current_url != self.prob_link

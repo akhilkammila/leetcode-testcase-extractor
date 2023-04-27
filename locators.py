@@ -23,6 +23,7 @@ class SingleProblemPage:
 class ResultConsole:
     WRONG_ANSWER_XPATH = "//div[text()='Wrong Answer']"
     CODE_SUBMITTED_TOO_SOON_XPATH = "//span[contains(text(), 'You have attempted to run code too soon.')]"
+    NETWORK_ERROR_XPATH = "//span[contains(text(), 'network')]"
 
     VARIABLE_DIV_XPATH = "//div[text()='{}']"
     EXPECTED_XPATH = "//div[text()='Expected']"
