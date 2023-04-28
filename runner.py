@@ -7,9 +7,12 @@ def solveProblem(problem_link, filePath):
     problemSolver.login()
     problemSolver.load_problem()
     problemSolver.switch_to_python()
+
     problemSolver.parse_inputs()
-    problemSolver.add_testcase(default=True)
+    problemSolver.setup_file()
+    problemSolver.add_testcase()
     problemSolver.submit()
+
     while (not problemSolver.isSolved()):
         problemSolver.parse_testcase()
         problemSolver.add_testcase()
@@ -25,4 +28,4 @@ def test():
 
 if __name__ == "__main__":
     # test()
-    solveProblem("https://leetcode.com/problems/two-sum/", "data/1.Two Sum")
+    solveProblem("https://leetcode.com/problems/count-and-say/", "data/38. Count and SAy")

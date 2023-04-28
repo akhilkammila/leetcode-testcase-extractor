@@ -37,8 +37,6 @@ class ProblemSolver:
 
     def load_problem(self, firstTime = True):
         self.driver.get(self.prob_link)
-
-        # ensure full loading
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, SingleProblemPage.EDITOR_CSS)))
         self.wait.until(lambda driver : len(driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)) >= 2)
         if firstTime:
@@ -52,12 +50,24 @@ class ProblemSolver:
         self.wait.until(lambda driver : len(driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)) != num_lines)
     
     def parse_inputs(self):
+        # parse variables
         second_line = self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1].text
         vars = [var.split(':')[0].strip() for var in second_line.split(',')[1:]]
         var_types = [var.split(':')[1].strip() for var in second_line.split(',')[1:]]
 
         self.variables = vars
         self.var_types = var_types
+    
+    def setup_file(self):
+        second_line = self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1]
+        second_line.click()
+        self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'a', 'c')
+        
+        f = open(self.filePath, "w")
+        f.write(pyperclip.paste())
+        f.write("\n" + " "*8 + SingleProblemPage.DEFAULT_SUBMISSION)
+        f.close()
+        self.testcase_strings.append(SingleProblemPage.DEFAULT_SUBMISSION)
     
     def submit(self, pauseTime=3):
         time.sleep(pauseTime)
@@ -80,8 +90,6 @@ class ProblemSolver:
                 self.driver.find_element(By.XPATH, ResultConsole.CODE_SUBMITTED_TOO_SOON_XPATH)
             except:
                 self.load_problem(False)
-            
-            print("errored, waiting")
             self.submit(pauseTime*1.5)
     
     def parse_testcase(self):
@@ -108,16 +116,17 @@ class ProblemSolver:
         testcase_string = "if {}: return {}".format(" and ".join(conditionals), output)
         self.testcase_strings.append(testcase_string)
     
-    def add_testcase(self, default = False):
-        testcase = SingleProblemPage.DEFAULT_SUBMISSION if default else self.testcase_strings[-1]
+    def add_testcase(self):
+        testcase = self.testcase_strings[-1]
         f = open(self.filePath, "a")
         f.write('\n' + " "*8 + testcase)
         f.close()
 
         f = open(self.filePath, "r")
         pyperclip.copy(f.read())
+        f.close()
 
-        self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[2].click()
+        self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1].click()
         self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'a', Keys.DELETE)
         self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'v')
     
