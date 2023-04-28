@@ -15,11 +15,13 @@ from locators import SingleProblemPage
 from locators import ResultConsole
 
 class ProblemSolver:
-    def __init__(self, prob_link, waitTime=20):
+    def __init__(self, prob_link, filePath, waitTime=25):
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
         self.wait = WebDriverWait(self.driver, waitTime)
+        self.filePath = filePath
         self.prob_link = prob_link
+
         self.variables = []
         self.var_types = []
         self.testcases = []
@@ -108,10 +110,15 @@ class ProblemSolver:
     
     def add_testcase(self, default = False):
         testcase = SingleProblemPage.DEFAULT_SUBMISSION if default else self.testcase_strings[-1]
-        pyperclip.copy(testcase)
-        last_line = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS + ':nth-child(2)')))
-        last_line.click()
-        self.driver.switch_to.active_element.send_keys(Keys.END + Keys.ENTER)
+        f = open(self.filePath, "a")
+        f.write('\n' + " "*8 + testcase)
+        f.close()
+
+        f = open(self.filePath, "r")
+        pyperclip.copy(f.read())
+
+        self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[2].click()
+        self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'a', Keys.DELETE)
         self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'v')
     
     def isSolved(self):
