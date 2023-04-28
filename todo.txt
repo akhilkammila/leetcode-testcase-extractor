@@ -1,10 +1,7 @@
-PRIORITY: handle large inputs, where leetcode does not show the entire testcase
-
 to-dos to make this problem run smoother + to help generalise:
-reset the code before starting OR
-have some logic to continue previous attempts
-check fully loading after switch to python by looking for words, not counting lines
-handle runtime exceptions and network errors
+    create a default answer based on output type (if output is int, need a certain default #)
+    dont add default if the problem was already started (logic to continue previous attempts)
+    check fully loading after switch to python by looking for words, not counting lines
 
 to dos to generalize:
 handle string inputs

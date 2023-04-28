@@ -28,4 +28,4 @@ def test():
 
 if __name__ == "__main__":
     # test()
-    solveProblem("https://leetcode.com/problems/count-and-say/", "data/38. Count and SAy")
+    solveProblem("https://leetcode.com/problems/count-and-say/", "data/38. Count and Say")
