@@ -15,7 +15,7 @@ from locators import SingleProblemPage
 from locators import ResultConsole
 
 class ProblemSolver:
-    def __init__(self, prob_link, filePath, waitTime=25):
+    def __init__(self, prob_link, filePath, waitTime=60):
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
         self.wait = WebDriverWait(self.driver, waitTime)
