@@ -1,13 +1,12 @@
 import time
-import tkinter as tk
 import pyperclip
 from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import StaleElementReferenceException
 
 from auth import AuthInfo
 from locators import LoginPage
@@ -16,8 +15,12 @@ from locators import ResultConsole
 
 class ProblemSolver:
     def __init__(self, prob_link, filePath, waitTime=60):
-        self.driver = webdriver.Chrome()
-        self.driver.maximize_window()
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+
+        self.driver = WebDriver(options = options)
         self.wait = WebDriverWait(self.driver, waitTime)
         self.filePath = filePath
         self.prob_link = prob_link
@@ -96,9 +99,8 @@ class ProblemSolver:
         def copy_following_div(div):
             div.find_elements(By.XPATH, ResultConsole.FOLLOWING_COPY_BUTTON_XPATH)[1].click()
             time.sleep(0.25)
-            return root.clipboard_get()
-
-        root = tk.Tk()
+            return pyperclip.paste()
+        
         testcase_inputs = []
         for var in self.variables:
             var_div = self.driver.find_elements(By.XPATH, ResultConsole.VARIABLE_DIV_XPATH.format(var))[-1]
