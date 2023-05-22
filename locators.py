@@ -1,9 +1,8 @@
-class LoginPage:
-    URL = "https://leetcode.com/accounts/login/"
-    TITLE = "Account Login - LeetCode"
-    USERNAME_NAME = "login"
-    PASSWORD_NAME = "password"
-    SIGN_IN_BUTTON_ID = "signin_btn"
+class Google:
+    URL = "https://accounts.google.com/ServiceLogin"
+
+class LeetcodeLogin:
+    URL = "https://leetcode.com/accounts/google/login"
 
 class ProblemPage:
     URL =  "https://leetcode.com/problemset/all/"

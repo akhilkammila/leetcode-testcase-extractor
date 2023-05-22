@@ -1,6 +1,5 @@
 import time
 import pyperclip
-from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,13 +7,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from auth import AuthInfo
-from locators import LoginPage
 from locators import SingleProblemPage
 from locators import ResultConsole
 
 class ProblemSolver:
-    def __init__(self, prob_link, filePath, waitTime=60):
+    def __init__(self, prob_link, filePath, waitTime=10):
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
@@ -29,14 +26,7 @@ class ProblemSolver:
         self.var_types = []
         self.testcases = []
         self.testcase_strings = []
-
-    def login(self):
-        self.driver.get(LoginPage.URL)
-        self.wait.until(EC.title_is(LoginPage.TITLE))
-        self.driver.find_element(By.NAME, LoginPage.USERNAME_NAME).send_keys(AuthInfo.gmail)
-        self.driver.find_element(By.NAME, LoginPage.PASSWORD_NAME).send_keys(AuthInfo.pswd)
-        self.driver.find_element(By.ID, LoginPage.SIGN_IN_BUTTON_ID).click()
-        self.wait.until_not(EC.title_is(LoginPage.TITLE))
+        print("setup complete")
 
     def load_problem(self, firstTime = True):
         self.driver.get(self.prob_link)
@@ -135,5 +125,5 @@ class ProblemSolver:
     def isSolved(self):
         return self.driver.current_url != self.prob_link
     
-    def manual_wait(self):
-        a = input()
+    def screenshot(self, filename):
+        self.driver.save_screenshot("screenshots/" + filename)

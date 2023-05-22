@@ -8,13 +8,17 @@ RUN apk update \
     && apk add chromium chromium-chromedriver \
     && apk add libffi-dev
 
-# install python dependencies
-COPY requirements.txt *.py /app/
-COPY /data /app/data
 WORKDIR /app
+# copy requirements.txt and data folder
+COPY requirements.txt .
+COPY /data /data
 
+# install python dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+
+# copy over files last
+COPY *.py .
 
 # run the application
 CMD ["python3", "runner.py"]
