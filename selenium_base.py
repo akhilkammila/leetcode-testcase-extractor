@@ -11,14 +11,30 @@ from undetected_chromedriver import Chrome, ChromeOptions
 from auth import GoogleLogin
 from locators import Google
 
+from pyvirtualdisplay import Display
+
 class SeleniumBase:
-    def __init__(self, waitTime = 30):
-        options = ChromeOptions()
+    def __init__(self, waitTime):
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+
+        options = Options()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-setuid-sandbox')
 
-        self.driver = Chrome(options) #using undetected_chromedriver
+        self.driver = WebDriver(options=options)
+        self.wait = WebDriverWait(self.driver, waitTime)
+    
+    def undetected_init(self, waitTime):
+        display = Display(visible=0, size=(800, 600))
+        display.start()
+
+        options = ChromeOptions()
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-setuid-sandbox')
+
+        self.driver = Chrome(options=options)
         self.wait = WebDriverWait(self.driver, waitTime)
 
     # Getters (with waiting)
@@ -26,6 +42,10 @@ class SeleniumBase:
         xpath = "//" + element_type + "[text()= '" + text + "']"
         self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
         return self.driver.find_element(By.XPATH, xpath)
+    
+    def get_by_id(self, element_type, id):
+        self.wait.until(EC.element_to_be_clickable((By.ID, id)))
+        return self.driver.find_element(By.ID, id)
     
     def get_by_href(self, href):
         xpath = "//a[@href='" + href + "']"

@@ -5,4 +5,6 @@
 
 create container:
 docker build -t leetcode .
-docker run -v /Users/akhilkammila/Projects/leetcode-testcase-extractor/screenshots:/app/screenshots leetcode:8
+docker run -v /Users/akhilkammila/Projects/leetcode-testcase-extractor/screenshots:/app/screenshots leetcode:1
+
+docker run -it -v /Users/akhilkammila/Projects/leetcode-testcase-extractor/screenshots:/app/screenshots leetcode:1

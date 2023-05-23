@@ -14,6 +14,7 @@ def login():
 def solveProblem(problem_link, filePath):
     try:
         problemSolver = ProblemSolver(problem_link, filePath)
+        problemSolver.login()
         problemSolver.load_problem()
         problemSolver.switch_to_python()
 
@@ -30,6 +31,11 @@ def solveProblem(problem_link, filePath):
     except:
         problemSolver.screenshot("error.png")
 
+def test():
+    problemSolver = ProblemSolver("https://leetcode.com/problems/sudoku-solver/", "data/37. Sudoku Solver")
+    problemSolver.login()
+
 if __name__ == "__main__":
-    login()
-    solveProblem("https://leetcode.com/problems/sudoku-solver/", "data/37. Sudoku Solver")
+    test()
+    # login()
+    # solveProblem("https://leetcode.com/problems/sudoku-solver/", "data/37. Sudoku Solver")

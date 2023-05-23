@@ -7,18 +7,15 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
+from auth import LeetcodeLogin
 from locators import SingleProblemPage
 from locators import ResultConsole
 
-class ProblemSolver:
-    def __init__(self, prob_link, filePath, waitTime=10):
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
+from selenium_base import SeleniumBase
 
-        self.driver = WebDriver(options = options)
-        self.wait = WebDriverWait(self.driver, waitTime)
+class ProblemSolver(SeleniumBase):
+    def __init__(self, prob_link, filePath, waitTime=10):
+        super().undetected_init(waitTime)
         self.filePath = filePath
         self.prob_link = prob_link
 
@@ -26,7 +23,20 @@ class ProblemSolver:
         self.var_types = []
         self.testcases = []
         self.testcase_strings = []
-        print("setup complete")
+        print("__init__ complete")
+    
+    def login(self):
+        self.driver.get("https://leetcode.com/accounts/login/")
+        self.wait.until_not(EC.presence_of_element_located((By.ID, "loading-screen")))
+        time.sleep(5)
+        self.screenshot("loginScreen.png")
+        element = self.get_by_id("input", "id_login")
+        self.screenshot("loginScreen2.png")
+        element.send_keys(LeetcodeLogin.gmail + Keys.TAB + LeetcodeLogin.pswd + Keys.ENTER)
+        self.screenshot("loginScreen3.png")
+        time.sleep(5)
+        self.screenshot("loginScreen4.png")
+
 
     def load_problem(self, firstTime = True):
         self.driver.get(self.prob_link)
