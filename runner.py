@@ -1,20 +1,11 @@
-import pyperclip
 from problem_solver import ProblemSolver
-from login_bot import LoginBot
-
-from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
 import time
-
-def login():
-    login_bot = LoginBot()
-    login_bot.google_login()
-    login_bot.leetcode_login()
 
 def solveProblem(problem_link, filePath):
     try:
         problemSolver = ProblemSolver(problem_link, filePath)
         problemSolver.login()
+        problemSolver.bypass_catpcha()
         problemSolver.load_problem()
         problemSolver.switch_to_python()
 
@@ -27,15 +18,9 @@ def solveProblem(problem_link, filePath):
             problemSolver.parse_testcase()
             problemSolver.add_testcase()
             problemSolver.submit()
-        problemSolver.manual_wait()
     except:
         problemSolver.screenshot("error.png")
-
-def test():
-    problemSolver = ProblemSolver("https://leetcode.com/problems/sudoku-solver/", "data/37. Sudoku Solver")
-    problemSolver.login()
+        time.sleep(100)
 
 if __name__ == "__main__":
-    test()
-    # login()
-    # solveProblem("https://leetcode.com/problems/sudoku-solver/", "data/37. Sudoku Solver")
+    solveProblem("https://leetcode.com/problems/sudoku-solver/", "data/37. Sudoku Solver")

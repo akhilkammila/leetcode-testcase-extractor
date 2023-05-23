@@ -1,13 +1,16 @@
-FROM python:3.11.3-alpine3.18
+FROM python:3.8-alpine3.10
 
 #update apk repo
-# RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/main/" > /etc/apk/repositories && \
-#     echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/community/" >> /etc/apk/repositories
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/main/" > /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/community/" >> /etc/apk/repositories
 
+# install chromium and chromedriver
 RUN apk update \
-    && apk add chromium chromium-chromedriver xvfb xauth xorg-server
+    && apk add chromium chromium-chromedriver \
+    && apk add libffi-dev
 
 WORKDIR /app
+
 # copy requirements.txt and data folder
 COPY requirements.txt .
 COPY /data ./data
@@ -15,10 +18,6 @@ COPY /data ./data
 # install python dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-
-# Set up the virtual display
-ENV DISPLAY=:99
-RUN pip install pyvirtualdisplay
 
 # copy over files last
 COPY *.py .
