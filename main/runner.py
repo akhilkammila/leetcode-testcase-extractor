@@ -5,6 +5,7 @@ from csv import DictReader
 def solveProblem(problem_link, filePath):
     problemSolver = ProblemSolver(problem_link, filePath)
     problemSolver.login_with_cookies()
+    time.sleep(1000)
     problemSolver.load_problem()
     problemSolver.switch_to_python()
 
@@ -19,7 +20,7 @@ def solveProblem(problem_link, filePath):
         problemSolver.submit()
 
 def test():
-    filename = "leetcode_cookies.csv"
+    filename = "main/leetcode_cookies.csv"
     result = []
     with open(filename, 'r') as file:
         csv_reader = DictReader(file)
@@ -29,5 +30,4 @@ def test():
     print(result)
 
 if __name__ == "__main__":
-    # test()
     solveProblem("https://leetcode.com/problems/sudoku-solver/", "data/37. Sudoku Solver")

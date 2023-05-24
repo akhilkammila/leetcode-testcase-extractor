@@ -11,16 +11,14 @@ RUN apk update \
 
 WORKDIR /app
 
-# copy requirements.txt and data folder
-COPY requirements.txt .
-COPY /data ./data
-
 # install python dependencies
+COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # copy over files last
-COPY *.py .
+COPY /data ./data
+COPY /main ./main
 
 # run the application
-CMD ["python3", "runner.py"]
+CMD ["python3", "main/runner.py"]

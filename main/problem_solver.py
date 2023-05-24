@@ -1,5 +1,6 @@
 import time
 import pyperclip
+from csv import DictReader
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,12 +9,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from auth import LeetcodeLogin
+from selenium_base import SeleniumBase
 from locators import SingleProblemPage
 from locators import ResultConsole
 from locators import LoginPage
-from csv import DictReader
-
-from selenium_base import SeleniumBase
 
 class ProblemSolver(SeleniumBase):
     def __init__(self, prob_link, filePath, waitTime=10):
@@ -40,9 +39,8 @@ class ProblemSolver(SeleniumBase):
         self.driver.get(LoginPage.URL)
         self.wait.until(EC.title_is(LoginPage.TITLE))
         self.wait.until_not(EC.presence_of_element_located((By.ID, LoginPage.LOADING_SCREEN_ID)))
-        print("loaded")
 
-        filename = "leetcode_cookies.csv"
+        filename = "main/leetcode_cookies.csv"
         cookies = []
         with open(filename, 'r') as file:
             csv_reader = DictReader(file)
@@ -52,13 +50,15 @@ class ProblemSolver(SeleniumBase):
         
         for i in cookies:
             self.driver.add_cookie(i)
-
-        print("cookies added")
         
         self.driver.refresh()
-        print("refreshed")
 
+        self.screenshot("refreshed.png")
         self.wait.until_not(EC.title_is(LoginPage.TITLE))
+        self.screenshot("refreshed2.png")
+        time.sleep(3)
+        self.screenshot("refreshed3.png")
+
 
     def load_problem(self, firstTime = True):
         self.driver.get(self.prob_link)
