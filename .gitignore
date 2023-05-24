@@ -1,8 +1,10 @@
 __pycache__
+.vscode
 
 #auth info
 auth.py
 leetcode_cookies.csv
 
 #debugging
-screenshots/
+screenshots
+todo.txt

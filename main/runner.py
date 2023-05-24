@@ -1,32 +1,29 @@
 from problem_solver import ProblemSolver
-import time
-from csv import DictReader
+from debug_wrapper import DebugWrapper
 
 def solveProblem(problem_link, filePath):
-    problemSolver = ProblemSolver(problem_link, filePath)
-    problemSolver.login_with_cookies()
-    problemSolver.load_problem()
-    problemSolver.switch_to_python()
+    try:
+        problemSolver = ProblemSolver(problem_link, filePath)
+        problemSolver = DebugWrapper(problemSolver)
 
-    problemSolver.parse_inputs()
-    problemSolver.setup_file()
-    problemSolver.add_testcase()
-    problemSolver.submit()
+        problemSolver.test("hello")
+        problemSolver.login()
+        problemSolver.load_problem()
+        problemSolver.switch_to_python()
 
-    while (not problemSolver.isSolved()):
-        problemSolver.parse_testcase()
+        problemSolver.parse_inputs()
+        problemSolver.setup_file()
         problemSolver.add_testcase()
         problemSolver.submit()
 
-def test():
-    filename = "main/leetcode_cookies.csv"
-    result = []
-    with open(filename, 'r') as file:
-        csv_reader = DictReader(file)
-        for row in csv_reader:
-            clean_row = {key.strip(): value.strip() for key, value in row.items() if key!=""}
-            result.append(clean_row)
-    print(result)
+        while (not problemSolver.isSolved()):
+            problemSolver.parse_testcase()
+            problemSolver.add_testcase()
+            problemSolver.submit()
+    except Exception as e:
+        print(e)
+        problemSolver.screenshot("error.png")
+        problemSolver.driver.quit()
 
 if __name__ == "__main__":
     solveProblem("https://leetcode.com/problems/sudoku-solver/", "data/37. Sudoku Solver")

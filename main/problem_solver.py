@@ -21,23 +21,11 @@ class ProblemSolver(SeleniumBase):
         self.var_types = []
         self.testcases = []
         self.testcase_strings = []
-        print("__init__ complete", flush=True)
-        
+
     def login(self):
         self.driver.get(LoginPage.URL)
         self.wait.until(EC.title_is(LoginPage.TITLE))
         self.wait.until_not(EC.presence_of_element_located((By.ID, LoginPage.LOADING_SCREEN_ID)))
-        
-        self.send_keys(self.get_by_id(LoginPage.USERNAME_BTN_ID), LeetcodeLogin.gmail)
-        self.send_keys(self.get_by_id(LoginPage.PASSWORD_BTN_ID), LeetcodeLogin.pswd)
-        self.click(self.get_by_id(LoginPage.SIGN_IN_BUTTON_ID))
-
-    def login_with_cookies(self):
-        self.driver.get(LoginPage.URL)
-        self.wait.until(EC.title_is(LoginPage.TITLE))
-        self.wait.until_not(EC.presence_of_element_located((By.ID, LoginPage.LOADING_SCREEN_ID)))
-
-        self.screenshot("before.png")
         
         filename = "main/leetcode_cookies.csv"
         cookies = []
@@ -46,18 +34,11 @@ class ProblemSolver(SeleniumBase):
             for row in csv_reader:
                 clean_row = {key.strip(): value.strip() for key, value in row.items() if key!=""}
                 cookies.append(clean_row)
-        
         for i in cookies:
             self.driver.add_cookie(i)
         
         self.driver.refresh()
-
-        self.screenshot("refreshed.png")
         self.wait.until_not(EC.title_is(LoginPage.TITLE))
-        self.screenshot("refreshed2.png")
-        time.sleep(3)
-        self.screenshot("refreshed3.png")
-
 
     def load_problem(self, firstTime = True):
         self.driver.get(self.prob_link)
@@ -156,5 +137,5 @@ class ProblemSolver(SeleniumBase):
     def isSolved(self):
         return self.driver.current_url != self.prob_link
     
-    def screenshot(self, filename):
-        self.driver.save_screenshot("screenshots/" + filename)
+    def test(self, s):
+        print(s)

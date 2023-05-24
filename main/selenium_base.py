@@ -1,3 +1,5 @@
+import os
+import time
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -5,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 class SeleniumBase:
+    # Initialize
     def __init__(self, waitTime):
         options = Options()
         options.add_argument('--headless')
@@ -14,6 +17,12 @@ class SeleniumBase:
 
         self.driver = WebDriver(options=options)
         self.wait = WebDriverWait(self.driver, waitTime)
+        self.screenshotFile = "screenshots/" + time.strftime("%Y%m%d-%H%M%S") + "/"
+        os.makedirs(self.screenshotFile)
+    
+    # Debug functions
+    def screenshot(self, filename):
+        self.driver.save_screenshot(self.screenshotFile + filename)
 
     # Getters (with waiting)
     def get_by_text(self, element_type, text):
