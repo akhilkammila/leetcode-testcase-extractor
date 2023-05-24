@@ -1,3 +1,7 @@
+to-do:
+make sure cookie login works on docker image
+refactor into folders
+
 to-dos to make this problem run smoother + to help generalise:
     create a default answer based on output type (if output is int, need a certain default #)
     dont add default if the problem was already started (logic to continue previous attempts)

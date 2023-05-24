@@ -3,9 +3,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-from auth import AuthInfo
-from locators import LoginPage
-from locators import ProblemPage
+from auth.auth import AuthInfo
+from main.locators import LoginPage
+from main.locators import ProblemPage
 
 class MainPageScraper:
     def __init__(self, waitTime=30):

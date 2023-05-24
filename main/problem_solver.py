@@ -1,5 +1,6 @@
 import time
 import pyperclip
+from csv import DictReader
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,14 +9,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from auth import LeetcodeLogin
+from selenium_base import SeleniumBase
 from locators import SingleProblemPage
 from locators import ResultConsole
-
-from selenium_base import SeleniumBase
+from locators import LoginPage
 
 class ProblemSolver(SeleniumBase):
     def __init__(self, prob_link, filePath, waitTime=10):
-        super().undetected_init(waitTime)
+        super().__init__(waitTime)
         self.filePath = filePath
         self.prob_link = prob_link
 
@@ -23,19 +24,40 @@ class ProblemSolver(SeleniumBase):
         self.var_types = []
         self.testcases = []
         self.testcase_strings = []
-        print("__init__ complete")
-    
+        print("__init__ complete", flush=True)
+        
     def login(self):
-        self.driver.get("https://leetcode.com/accounts/login/")
-        self.wait.until_not(EC.presence_of_element_located((By.ID, "loading-screen")))
-        time.sleep(5)
-        self.screenshot("loginScreen.png")
-        element = self.get_by_id("input", "id_login")
-        self.screenshot("loginScreen2.png")
-        element.send_keys(LeetcodeLogin.gmail + Keys.TAB + LeetcodeLogin.pswd + Keys.ENTER)
-        self.screenshot("loginScreen3.png")
-        time.sleep(5)
-        self.screenshot("loginScreen4.png")
+        self.driver.get(LoginPage.URL)
+        self.wait.until(EC.title_is(LoginPage.TITLE))
+        self.wait.until_not(EC.presence_of_element_located((By.ID, LoginPage.LOADING_SCREEN_ID)))
+        
+        self.send_keys(self.get_by_id(LoginPage.USERNAME_BTN_ID), LeetcodeLogin.gmail)
+        self.send_keys(self.get_by_id(LoginPage.PASSWORD_BTN_ID), LeetcodeLogin.pswd)
+        self.click(self.get_by_id(LoginPage.SIGN_IN_BUTTON_ID))
+
+    def login_with_cookies(self):
+        self.driver.get(LoginPage.URL)
+        self.wait.until(EC.title_is(LoginPage.TITLE))
+        self.wait.until_not(EC.presence_of_element_located((By.ID, LoginPage.LOADING_SCREEN_ID)))
+
+        filename = "main/leetcode_cookies.csv"
+        cookies = []
+        with open(filename, 'r') as file:
+            csv_reader = DictReader(file)
+            for row in csv_reader:
+                clean_row = {key.strip(): value.strip() for key, value in row.items() if key!=""}
+                cookies.append(clean_row)
+        
+        for i in cookies:
+            self.driver.add_cookie(i)
+        
+        self.driver.refresh()
+
+        self.screenshot("refreshed.png")
+        self.wait.until_not(EC.title_is(LoginPage.TITLE))
+        self.screenshot("refreshed2.png")
+        time.sleep(3)
+        self.screenshot("refreshed3.png")
 
 
     def load_problem(self, firstTime = True):
