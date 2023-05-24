@@ -5,7 +5,6 @@ from csv import DictReader
 def solveProblem(problem_link, filePath):
     problemSolver = ProblemSolver(problem_link, filePath)
     problemSolver.login_with_cookies()
-    time.sleep(1000)
     problemSolver.load_problem()
     problemSolver.switch_to_python()
 

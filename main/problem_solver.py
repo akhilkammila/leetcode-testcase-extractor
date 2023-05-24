@@ -1,9 +1,6 @@
 import time
 import pyperclip
 from csv import DictReader
-from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -40,6 +37,8 @@ class ProblemSolver(SeleniumBase):
         self.wait.until(EC.title_is(LoginPage.TITLE))
         self.wait.until_not(EC.presence_of_element_located((By.ID, LoginPage.LOADING_SCREEN_ID)))
 
+        self.screenshot("before.png")
+        
         filename = "main/leetcode_cookies.csv"
         cookies = []
         with open(filename, 'r') as file:
