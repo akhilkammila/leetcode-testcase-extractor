@@ -11,6 +11,7 @@ from auth import LeetcodeLogin
 from locators import SingleProblemPage
 from locators import ResultConsole
 from locators import LoginPage
+from csv import DictReader
 
 from selenium_base import SeleniumBase
 
@@ -35,7 +36,28 @@ class ProblemSolver(SeleniumBase):
         self.send_keys(self.get_by_id(LoginPage.PASSWORD_BTN_ID), LeetcodeLogin.pswd)
         self.click(self.get_by_id(LoginPage.SIGN_IN_BUTTON_ID))
 
-    def bypass_catpcha(self):
+    def login_with_cookies(self):
+        self.driver.get(LoginPage.URL)
+        self.wait.until(EC.title_is(LoginPage.TITLE))
+        self.wait.until_not(EC.presence_of_element_located((By.ID, LoginPage.LOADING_SCREEN_ID)))
+        print("loaded")
+
+        filename = "leetcode_cookies.csv"
+        cookies = []
+        with open(filename, 'r') as file:
+            csv_reader = DictReader(file)
+            for row in csv_reader:
+                clean_row = {key.strip(): value.strip() for key, value in row.items() if key!=""}
+                cookies.append(clean_row)
+        
+        for i in cookies:
+            self.driver.add_cookie(i)
+
+        print("cookies added")
+        
+        self.driver.refresh()
+        print("refreshed")
+
         self.wait.until_not(EC.title_is(LoginPage.TITLE))
 
     def load_problem(self, firstTime = True):
