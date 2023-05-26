@@ -16,11 +16,11 @@ class DebugWrapper:
     def wrap_method(self, method):
         def time_and_screenshot_wrapper(*args, **kwards):
             # Run and print time elapsed
-            print("Running method: {}".format(method.__name__))
+            print("Running method: {}".format(method.__name__), flush=True)
             start = time.time()
             result = method(*args, **kwards)
             end = time.time()
-            print("Time elapsed: {}".format(end - start) + "\n")
+            print("Time elapsed: {}".format(end - start) + "\n", flush=True)
 
             # Take screenshot
             screenshotMethod = getattr(self.wrapped, "screenshot")

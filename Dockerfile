@@ -1,8 +1,8 @@
-FROM python:3.8-alpine3.10
+FROM python:3.8-alpine
 
-#update apk repo
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/main/" > /etc/apk/repositories && \
-    echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/community/" >> /etc/apk/repositories
+# update apk repo
+RUN echo "http://dl-4.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repositories && \
+    echo "http://dl-4.alpinelinux.org/alpine/v3.14/community" >> /etc/apk/repositories
 
 # install chromium and chromedriver
 RUN apk update \

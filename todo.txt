@@ -1,3 +1,9 @@
+to-do:
+    fix printing traceback when erroring
+    move screenshot on error to the DebugWrapper
+
+    start to fix the solve problem part(load_problem is currently erroring)
+
 to-dos to make this problem run smoother + to help generalise:
     create a default answer based on output type (if output is int, need a certain default #)
     dont add default if the problem was already started (logic to continue previous attempts)

@@ -12,7 +12,7 @@ from locators import ResultConsole
 from locators import LoginPage
 
 class ProblemSolver(SeleniumBase):
-    def __init__(self, prob_link, filePath, waitTime=10):
+    def __init__(self, prob_link, filePath, waitTime=30):
         super().__init__(waitTime)
         self.filePath = filePath
         self.prob_link = prob_link
@@ -62,11 +62,14 @@ class ProblemSolver(SeleniumBase):
 
         self.variables = vars
         self.var_types = var_types
+        print(vars)
+        print(var_types)
     
     def setup_file(self):
         second_line = self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1]
         second_line.click()
         self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'a', 'c')
+        self.screenshot("copied.png")
         
         f = open(self.filePath, "w")
         f.write(pyperclip.paste())
@@ -136,6 +139,3 @@ class ProblemSolver(SeleniumBase):
     
     def isSolved(self):
         return self.driver.current_url != self.prob_link
-    
-    def test(self, s):
-        print(s)
