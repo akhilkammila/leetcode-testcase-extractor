@@ -12,9 +12,9 @@ RUN apk update \
 WORKDIR /app
 
 # install python dependencies
+RUN pip3 install --upgrade pip
 COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # copy over files last
 COPY /data ./data

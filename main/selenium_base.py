@@ -55,3 +55,29 @@ class SeleniumBase:
     def send_keys(self, element, keys):
         self.click(element)
         self.driver.switch_to.active_element.send_keys(keys)
+    
+    # Copy paste operators
+    def get_clipboard(self):
+        trigger_script = """
+        var element = document.body;
+        var event = new MouseEvent('click', {
+            'view': window,
+            'bubbles': true,
+            'cancelable': true
+        });
+        element.dispatchEvent(event);
+        """
+        self.driver.execute_script(trigger_script)
+
+        # Read the text from the clipboard using the Clipboard API
+        read_script = "return navigator.clipboard.readText();"
+        clipboard_text = self.driver.execute_script(read_script)
+    
+        return clipboard_text
+    
+    def set_clipboard(self, text):
+        self.driver.execute_script("navigator.clipboard.writeText(arguments[0])", text)
+    
+    def pause(self, seconds):
+        print("pausing for " + str(seconds) + " seconds", flush=True)
+        time.sleep(seconds)

@@ -68,8 +68,10 @@ class ProblemSolver(SeleniumBase):
     def setup_file(self):
         second_line = self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1]
         second_line.click()
-        self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'a', 'c')
-        self.screenshot("copied.png")
+        self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', 'c')
+
+        time.sleep(100)
+        print(self.get_clipboard())
         
         f = open(self.filePath, "w")
         f.write(pyperclip.paste())
