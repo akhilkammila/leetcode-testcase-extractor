@@ -62,19 +62,31 @@ class SeleniumBase:
         # add input field
         self.driver.execute_script('''
         var tempInput = document.createElement("input");
+        tempInput.id = "tempInput";
         document.body.appendChild(tempInput);''')
-        self.screenshot("added.png")
 
         # paste into it and get contents
-        input_field = self.driver.switch_to.active_element
+        input_field = self.get_by_id("tempInput")
         input_field.send_keys(Keys.CONTROL, 'v')
-        self.screenshot("pasted.png")
         content = input_field.get_attribute('value')
 
-
+        # remove field
         self.driver.execute_script("arguments[0].remove()", input_field)
-        self.screenshot("removed.png")
         return content
+    
+    def set_clipboard(self, text):
+        self.driver.execute_script('''
+            var tempInput = document.createElement("input");
+            tempInput.id = "tempInput";
+            tempInput.value = "{content}";
+            document.body.appendChild(tempInput);
+        '''.format(content=text))
+
+        input_field = self.get_by_id("tempInput")
+        input_field.send_keys(Keys.CONTROL, 'a', 'c')
+
+        # remove field
+        self.driver.execute_script("arguments[0].remove()", input_field)
     
     def pause(self, seconds):
         print("pausing for " + str(seconds) + " seconds", flush=True)
