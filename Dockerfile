@@ -6,8 +6,7 @@ RUN echo "http://dl-4.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repositorie
 
 # install chromium and chromedriver
 RUN apk update \
-    && apk add chromium chromium-chromedriver \
-    && apk add libffi-dev
+    && apk add chromium chromium-chromedriver
 
 WORKDIR /app
 

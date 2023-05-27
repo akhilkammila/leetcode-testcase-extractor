@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 class SeleniumBase:
     # Initialize
@@ -56,27 +57,24 @@ class SeleniumBase:
         self.click(element)
         self.driver.switch_to.active_element.send_keys(keys)
     
-    # Copy paste operators
+    # Copy and paste
     def get_clipboard(self):
-        trigger_script = """
-        var element = document.body;
-        var event = new MouseEvent('click', {
-            'view': window,
-            'bubbles': true,
-            'cancelable': true
-        });
-        element.dispatchEvent(event);
-        """
-        self.driver.execute_script(trigger_script)
+        # add input field
+        self.driver.execute_script('''
+        var tempInput = document.createElement("input");
+        document.body.appendChild(tempInput);''')
+        self.screenshot("added.png")
 
-        # Read the text from the clipboard using the Clipboard API
-        read_script = "return navigator.clipboard.readText();"
-        clipboard_text = self.driver.execute_script(read_script)
-    
-        return clipboard_text
-    
-    def set_clipboard(self, text):
-        self.driver.execute_script("navigator.clipboard.writeText(arguments[0])", text)
+        # paste into it and get contents
+        input_field = self.driver.switch_to.active_element
+        input_field.send_keys(Keys.CONTROL, 'v')
+        self.screenshot("pasted.png")
+        content = input_field.get_attribute('value')
+
+
+        self.driver.execute_script("arguments[0].remove()", input_field)
+        self.screenshot("removed.png")
+        return content
     
     def pause(self, seconds):
         print("pausing for " + str(seconds) + " seconds", flush=True)

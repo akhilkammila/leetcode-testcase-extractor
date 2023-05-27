@@ -1,18 +1,16 @@
 import time
-import pyperclip
 from csv import DictReader
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from auth import LeetcodeLogin
 from selenium_base import SeleniumBase
 from locators import SingleProblemPage
 from locators import ResultConsole
 from locators import LoginPage
 
 class ProblemSolver(SeleniumBase):
-    def __init__(self, prob_link, filePath, waitTime=30):
+    def __init__(self, prob_link, filePath, waitTime=80):
         super().__init__(waitTime)
         self.filePath = filePath
         self.prob_link = prob_link
@@ -69,12 +67,10 @@ class ProblemSolver(SeleniumBase):
         second_line = self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1]
         second_line.click()
         self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', 'c')
-
-        time.sleep(100)
         print(self.get_clipboard())
         
         f = open(self.filePath, "w")
-        f.write(pyperclip.paste())
+        # f.write(pyperclip.paste())
         f.write("\n" + " "*8 + SingleProblemPage.DEFAULT_SUBMISSION)
         f.close()
         self.testcase_strings.append(SingleProblemPage.DEFAULT_SUBMISSION)
