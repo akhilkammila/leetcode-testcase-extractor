@@ -1,3 +1,2 @@
 class Solution:     def convert(self, s: str, numRows: int) -> str:
         if (False): return
-        if (False): return

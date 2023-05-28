@@ -12,7 +12,7 @@ from locators import LoginPage
 class ProblemSolver(SeleniumBase):
     def __init__(self, prob_link, filePath, waitTime=20):
         super().__init__(waitTime)
-        self.filePath = filePath
+        self.filePath = "data/" + filePath
         self.prob_link = prob_link
 
         self.variables = []
@@ -59,7 +59,7 @@ class ProblemSolver(SeleniumBase):
         var_types = [var.split(':')[1].strip() for var in second_line.split(',')[1:]]
 
         self.variables = vars
-        self.var_types = var_types
+        self.var_types = var_types #var types is currently wrong
         print(vars)
         print(var_types)
     
@@ -68,42 +68,12 @@ class ProblemSolver(SeleniumBase):
         second_line.click()
         self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', 'c')
 
-        print(self.get_clipboard())
-
-        self.set_clipboard("test")
-        second_line = self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1]
-        second_line.click()
-        self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', 'v')
-        self.screenshot("pasted.png")
-        
+        problem = self.get_clipboard()
+        print(problem)
         f = open(self.filePath, "w")
-        f.write(self.get_clipboard())
-        f.write("\n" + " "*8 + SingleProblemPage.DEFAULT_SUBMISSION)
+        f.write(problem)
         f.close()
         self.testcase_strings.append(SingleProblemPage.DEFAULT_SUBMISSION)
-    
-    def submit(self, pauseTime=3):
-        time.sleep(pauseTime)
-        self.driver.find_element(By.XPATH, SingleProblemPage.SUBMIT_BUTTON_XPATH).click()
-        self.wait.until_not(EC.presence_of_element_located((By.XPATH, ResultConsole.WRONG_ANSWER_XPATH)))
- 
-        wrong_answer_found = EC.presence_of_element_located((By.XPATH, ResultConsole.WRONG_ANSWER_XPATH))
-        code_submitted_too_soon = EC.presence_of_element_located((By.XPATH, ResultConsole.CODE_SUBMITTED_TOO_SOON_XPATH))
-        network_error = EC.presence_of_element_located((By.XPATH, ResultConsole.NETWORK_ERROR_XPATH))
-        self.wait.until(EC.any_of(wrong_answer_found, code_submitted_too_soon, network_error))
-
-        # If there is a wrong answer(normal), we do nothing
-        try:
-            self.driver.find_element(By.XPATH, ResultConsole.WRONG_ANSWER_XPATH)
-        except:
-            # If there is not a wrong answer, there are two cases
-            # 1. we find code submitted too soon, so we resubmit
-            # 2. we don't find it, so probably network error. reload, then resubmit
-            try:
-                self.driver.find_element(By.XPATH, ResultConsole.CODE_SUBMITTED_TOO_SOON_XPATH)
-            except:
-                self.load_problem(False)
-            self.submit(pauseTime*1.5)
     
     def parse_testcase(self):
         def copy_following_div(div):
@@ -135,12 +105,35 @@ class ProblemSolver(SeleniumBase):
         f.close()
 
         f = open(self.filePath, "r")
-        pyperclip.copy(f.read())
+        self.set_clipboard(f.read())
         f.close()
 
         self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1].click()
         self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'a', Keys.DELETE)
         self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'v')
+    
+    def submit(self, pauseTime=3):
+        time.sleep(pauseTime)
+        self.driver.find_element(By.XPATH, SingleProblemPage.SUBMIT_BUTTON_XPATH).click()
+        self.wait.until_not(EC.presence_of_element_located((By.XPATH, ResultConsole.WRONG_ANSWER_XPATH)))
+ 
+        wrong_answer_found = EC.presence_of_element_located((By.XPATH, ResultConsole.WRONG_ANSWER_XPATH))
+        code_submitted_too_soon = EC.presence_of_element_located((By.XPATH, ResultConsole.CODE_SUBMITTED_TOO_SOON_XPATH))
+        network_error = EC.presence_of_element_located((By.XPATH, ResultConsole.NETWORK_ERROR_XPATH))
+        self.wait.until(EC.any_of(wrong_answer_found, code_submitted_too_soon, network_error))
+
+        # If there is a wrong answer(normal), we do nothing
+        try:
+            self.driver.find_element(By.XPATH, ResultConsole.WRONG_ANSWER_XPATH)
+        except:
+            # If there is not a wrong answer, there are two cases
+            # 1. we find code submitted too soon, so we resubmit
+            # 2. we don't find it, so probably network error. reload, then resubmit
+            try:
+                self.driver.find_element(By.XPATH, ResultConsole.CODE_SUBMITTED_TOO_SOON_XPATH)
+            except:
+                self.load_problem(False)
+            self.submit(pauseTime*1.5)
     
     def isSolved(self):
         return self.driver.current_url != self.prob_link

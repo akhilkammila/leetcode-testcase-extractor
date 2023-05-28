@@ -25,7 +25,6 @@ def solveProblem(problem_link, filePath):
         traceback.print_exc()
         problemSolver.screenshot("error.png")
         problemSolver.driver.quit()
-        print("quit")
 
 if __name__ == "__main__":
-    solveProblem("https://leetcode.com/problems/zigzag-conversion/", "data/6.Zigzag Conversion")
+    solveProblem("https://leetcode.com/problems/zigzag-conversion/", "6. Zigzag Conversion")
