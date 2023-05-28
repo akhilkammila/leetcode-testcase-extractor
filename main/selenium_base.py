@@ -57,11 +57,10 @@ class SeleniumBase:
         self.click(element)
         self.driver.switch_to.active_element.send_keys(keys)
     
-    # Copy and paste
     def get_clipboard(self):
         # add input field
         self.driver.execute_script('''
-        var tempInput = document.createElement("input");
+        var tempInput = document.createElement("textarea");
         tempInput.id = "tempInput";
         document.body.appendChild(tempInput);''')
 
@@ -76,17 +75,24 @@ class SeleniumBase:
     
     def set_clipboard(self, text):
         self.driver.execute_script('''
-            var tempInput = document.createElement("input");
+            var tempInput = document.createElement("textarea");
             tempInput.id = "tempInput";
             tempInput.value = "{content}";
+            var event = new Event('input');
+            tempInput.dispatchEvent(event);
+            var changeEvent = new Event('change');
+            tempInput.dispatchEvent(changeEvent);
             document.body.appendChild(tempInput);
         '''.format(content=text))
+        self.screenshot("set1.png")
 
         input_field = self.get_by_id("tempInput")
         input_field.send_keys(Keys.CONTROL, 'a', 'c')
+        self.screenshot("set2.png")
 
         # remove field
         self.driver.execute_script("arguments[0].remove()", input_field)
+        self.screenshot("set3.png")
     
     def pause(self, seconds):
         print("pausing for " + str(seconds) + " seconds", flush=True)

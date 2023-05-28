@@ -55,13 +55,13 @@ class ProblemSolver(SeleniumBase):
     def parse_inputs(self):
         # parse variables
         second_line = self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1].text
+        second_line = second_line[second_line.find('(')+1:second_line.find(')')]
+
         vars = [var.split(':')[0].strip() for var in second_line.split(',')[1:]]
         var_types = [var.split(':')[1].strip() for var in second_line.split(',')[1:]]
 
         self.variables = vars
-        self.var_types = var_types #var types is currently wrong
-        print(vars)
-        print(var_types)
+        self.var_types = var_types
     
     def setup_file(self):
         second_line = self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1]
@@ -69,7 +69,6 @@ class ProblemSolver(SeleniumBase):
         self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', 'c')
 
         problem = self.get_clipboard()
-        print(problem)
         f = open(self.filePath, "w")
         f.write(problem)
         f.close()
@@ -105,12 +104,14 @@ class ProblemSolver(SeleniumBase):
         f.close()
 
         f = open(self.filePath, "r")
+        print(f.read())
         self.set_clipboard(f.read())
+        print(self.get_clipboard())
         f.close()
 
         self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1].click()
-        self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'a', Keys.DELETE)
-        self.driver.switch_to.active_element.send_keys(Keys.COMMAND, 'v')
+        self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', Keys.DELETE)
+        self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'v')
     
     def submit(self, pauseTime=3):
         time.sleep(pauseTime)

@@ -20,7 +20,7 @@ class DebugWrapper:
             start = time.time()
             result = method(*args, **kwards)
             end = time.time()
-            print("Time elapsed: {}".format(end - start) + "\n", flush=True)
+            print("Method complete. Time elapsed: {}".format(end - start) + "\n", flush=True)
 
             # Take screenshot
             screenshotMethod = getattr(self.wrapped, "screenshot")
