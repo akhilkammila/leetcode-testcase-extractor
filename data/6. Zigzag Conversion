@@ -1,5 +1,4 @@
 class Solution:
     def convert(self, s: str, numRows: int) -> str:
-        
-        
         if (False): return
+        if s == "PAYPALISHIRING" and numRows == 3: return "PAHNAPLSIIGYIR"

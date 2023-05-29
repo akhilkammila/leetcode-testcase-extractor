@@ -15,3 +15,6 @@ docker build -t leetcode:2 -f Dockerfile.debian .
 
 
 -v /dev/shm:/dev/shm 
+
+Copy paste issues:
+after setting clipboard, cannot do any more operations with the leetcode editor. cannot control a delete (because for some reason this sets the clipboard?), must only click and control v

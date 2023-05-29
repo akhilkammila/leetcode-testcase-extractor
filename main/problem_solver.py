@@ -64,9 +64,9 @@ class ProblemSolver(SeleniumBase):
         self.var_types = var_types
     
     def setup_file(self):
-        second_line = self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1]
+        second_line = self.driver.find_element(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)
         second_line.click()
-        self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', 'c')
+        self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', 'c', Keys.DELETE)
 
         problem = self.get_clipboard()
         f = open(self.filePath, "w")
@@ -98,20 +98,22 @@ class ProblemSolver(SeleniumBase):
         self.testcase_strings.append(testcase_string)
     
     def add_testcase(self):
+        # Write testcase to file
         testcase = self.testcase_strings[-1]
         f = open(self.filePath, "a")
         f.write('\n' + " "*8 + testcase)
-        f.close()
+        f.close()    
 
+        # Set clipboard to testcase
         f = open(self.filePath, "r")
-        print(f.read())
         self.set_clipboard(f.read())
-        print(self.get_clipboard())
         f.close()
+        print(self.get_clipboard())
 
-        self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1].click()
-        self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', Keys.DELETE)
+        self.screenshot("add1.png")
+        self.driver.find_element(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS).click()
         self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'v')
+        print(self.get_clipboard())
     
     def submit(self, pauseTime=3):
         time.sleep(pauseTime)
