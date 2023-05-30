@@ -13,11 +13,13 @@ class ProblemPage:
 
 class SingleProblemPage:
     EDITOR_CSS = "div[class=\"view-lines monaco-mouse-cursor-text\"]"
-    EDITOR_LINE_CSS = "div[class='view-line']"
+    EDITOR_LINE_CLASS = 'view-line'
+    LINE_NUMBER_CLASS = "line-numbers"
 
     CPP_BUTTON_XPATH = "//div[text()='C++']"
     PYTHON_BUTTON_XPATH = "//div[text()='Python3']"
     SUBMIT_BUTTON_XPATH = "//button[text()='Submit']"
+    RESET_BUTTON_XPATH = "//*[@id='editor']/div[3]/div[2]/div/div[3]"
 
     DEFAULT_SUBMISSION = "if (False): return"
 

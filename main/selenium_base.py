@@ -28,6 +28,10 @@ class SeleniumBase:
     # Debug functions
     def screenshot(self, filename):
         self.driver.save_screenshot(self.screenshotFile + filename)
+    
+    def save_html(self):
+        with open(self.screenshotFile + "html.html", "w") as file:
+            file.write(self.driver.page_source)
 
     # Getters (with waiting)
     def get_by_text(self, element_type, text):
@@ -48,6 +52,14 @@ class SeleniumBase:
         self.wait.until(EC.element_to_be_clickable((By.LINK_TEXT, text)))
         return self.driver.find_element(By.LINK_TEXT, text)
     
+    def get_by_xpath(self, xpath):
+        self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        return self.driver.find_element(By.XPATH, xpath)
+    
+    def get_by_class(self, class_name):
+        self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME, class_name)))
+        return self.driver.find_element(By.CLASS_NAME, class_name)
+    
     # Operators
     def click(self, element):
         element.click()
@@ -57,6 +69,7 @@ class SeleniumBase:
         self.click(element)
         self.driver.switch_to.active_element.send_keys(keys)
     
+    # Clipboard Operators
     def get_clipboard(self):
         # add input field
         self.driver.execute_script('''
@@ -68,7 +81,6 @@ class SeleniumBase:
         input_field = self.get_by_id("tempInput")
         input_field.send_keys(Keys.CONTROL, 'v')
         content = input_field.get_attribute('value')
-        self.screenshot("get.png")
 
         # remove field
         self.driver.execute_script("arguments[0].remove()", input_field)
@@ -81,11 +93,9 @@ class SeleniumBase:
             tempInput.value = String.raw`{content}`;
             document.body.appendChild(tempInput);
         '''.format(content=text))
-        self.screenshot("set1.png")
 
         input_field = self.get_by_id("tempInput")
         input_field.send_keys(Keys.CONTROL, 'a', 'c')
-        self.screenshot("set2.png")
 
         # remove field
         self.driver.execute_script("arguments[0].remove()", input_field)

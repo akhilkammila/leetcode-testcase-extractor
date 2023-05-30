@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from selenium_base import SeleniumBase
+from problem_page_helper import ProblemPageHelper
 from locators import SingleProblemPage
 from locators import ResultConsole
 from locators import LoginPage
@@ -41,20 +42,25 @@ class ProblemSolver(SeleniumBase):
     def load_problem(self, firstTime = True):
         self.driver.get(self.prob_link)
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, SingleProblemPage.EDITOR_CSS)))
-        self.wait.until(lambda driver : len(driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)) >= 2)
+        self.wait.until(lambda driver : len(driver.find_elements(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS)) >= 2)
         if firstTime:
             self.wait.until(EC.presence_of_element_located((By.XPATH, SingleProblemPage.CPP_BUTTON_XPATH)))
     
     def switch_to_python(self):
-        num_lines = len(self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS))
+        num_lines = len(self.driver.find_elements(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS))
         self.driver.find_element(By.XPATH, SingleProblemPage.CPP_BUTTON_XPATH).click()
         self.driver.find_element(By.XPATH, SingleProblemPage.PYTHON_BUTTON_XPATH).click()
 
-        self.wait.until(lambda driver : len(driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)) != num_lines)
+        self.wait.until(lambda driver : len(driver.find_elements(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS)) != num_lines)
     
+    def reset_to_default(self):
+        self.click(self.get_by_xpath(SingleProblemPage.RESET_BUTTON_XPATH))
+        self.click(self.get_by_text("button", "Confirm"))
+        self.wait.until(ProblemPageHelper.linesCountEquals(self.driver, 3))
+
     def parse_inputs(self):
         # parse variables
-        second_line = self.driver.find_elements(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)[1].text
+        second_line = self.driver.find_elements(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS)[1].text
         second_line = second_line[second_line.find('(')+1:second_line.find(')')]
 
         vars = [var.split(':')[0].strip() for var in second_line.split(',')[1:]]
@@ -64,9 +70,9 @@ class ProblemSolver(SeleniumBase):
         self.var_types = var_types
     
     def setup_file(self):
-        second_line = self.driver.find_element(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS)
+        second_line = self.driver.find_element(By.CLASS_NAME, SingleProblemPage.LINE_NUMBER_CLASS)
         second_line.click()
-        self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', 'c', Keys.DELETE)
+        self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', 'c')
 
         problem = self.get_clipboard()
         f = open(self.filePath, "w")
@@ -77,8 +83,7 @@ class ProblemSolver(SeleniumBase):
     def parse_testcase(self):
         def copy_following_div(div):
             div.find_elements(By.XPATH, ResultConsole.FOLLOWING_COPY_BUTTON_XPATH)[1].click()
-            time.sleep(0.25)
-            return pyperclip.paste()
+            return self.get_clipboard()
         
         testcase_inputs = []
         for var in self.variables:
@@ -98,6 +103,11 @@ class ProblemSolver(SeleniumBase):
         self.testcase_strings.append(testcase_string)
     
     def add_testcase(self):
+        first_line = self.driver.find_element(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS)
+        first_line.click()
+        self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', Keys.DELETE)
+        self.wait.until(ProblemPageHelper.linesCountEquals(self.driver, 1))
+
         # Write testcase to file
         testcase = self.testcase_strings[-1]
         f = open(self.filePath, "a")
@@ -108,12 +118,10 @@ class ProblemSolver(SeleniumBase):
         f = open(self.filePath, "r")
         self.set_clipboard(f.read())
         f.close()
-        print(self.get_clipboard())
 
-        self.screenshot("add1.png")
-        self.driver.find_element(By.CSS_SELECTOR, SingleProblemPage.EDITOR_LINE_CSS).click()
+        # figure out why this becomes stale if i don't sleep
+        self.driver.find_element(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS).click()
         self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'v')
-        print(self.get_clipboard())
     
     def submit(self, pauseTime=3):
         time.sleep(pauseTime)

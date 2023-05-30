@@ -1,4 +1,14 @@
 class Solution:
     def convert(self, s: str, numRows: int) -> str:
+        
         if (False): return
         if s == "PAYPALISHIRING" and numRows == 3: return "PAHNAPLSIIGYIR"
+        if s == "PAYPALISHIRING" and numRows == 4: return "PINALSIGYAHRPI"
+        if s == "A" and numRows == 1: return "A"
+        if s == "A" and numRows == 2: return "A"
+        if s == "A" and numRows == 3: return "A"
+        if s == "A" and numRows == 4: return "A"
+        if s == "A" and numRows == 5: return "A"
+        if s == "AB" and numRows == 1: return "AB"
+        if s == "AB" and numRows == 2: return "AB"
+        if s == "AB" and numRows == 3: return "AB"

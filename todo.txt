@@ -1,10 +1,12 @@
 to-do:
+    check how many lines by looking for the text 1 and 2 and so on
     fix printing traceback when erroring
     move screenshot on error to the DebugWrapper
 
     start to fix the solve problem part(load_problem is currently erroring)
 
 to-dos to make this problem run smoother + to help generalise:
+    check that switch to python worked by looking for words, not lines changed
     create a default answer based on output type (if output is int, need a certain default #)
     dont add default if the problem was already started (logic to continue previous attempts)
     check fully loading after switch to python by looking for words, not counting lines

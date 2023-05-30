@@ -3,6 +3,7 @@ import time
 class DebugWrapper:
     def __init__(self, wrapped_class):
         self.wrapped = wrapped_class
+        self.counter = 0
 
     # Instead of getting the actual method, we wrap the method with our own
     def __getattr__(self, attr):
@@ -24,8 +25,8 @@ class DebugWrapper:
 
             # Take screenshot
             screenshotMethod = getattr(self.wrapped, "screenshot")
-            screenshotMethod("{}.png".format(method.__name__))
-
+            screenshotMethod("{}_{}.png".format(str(self.counter).zfill(3), method.__name__))
+            self.counter+=1
             return result
 
         return time_and_screenshot_wrapper

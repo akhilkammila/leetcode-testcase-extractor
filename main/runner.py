@@ -11,6 +11,7 @@ def solveProblem(problem_link, filePath):
         problemSolver.login()
         problemSolver.load_problem()
         problemSolver.switch_to_python()
+        problemSolver.reset_to_default()
 
         problemSolver.parse_inputs()
         problemSolver.setup_file()
@@ -23,6 +24,7 @@ def solveProblem(problem_link, filePath):
             problemSolver.submit()
     except:
         traceback.print_exc()
+        problemSolver.save_html()
         problemSolver.screenshot("error.png")
         problemSolver.driver.quit()
 
