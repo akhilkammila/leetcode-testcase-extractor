@@ -1,15 +1,14 @@
 to-do:
-    DONE: check how many lines by looking for the text 1 and 2 and so on
-    check for full updating by seeing if an element that should only be there once (view-lines) is there twice
-    submit is taking a lone time, might need to fine tune waits
+    continue a problem that has already been started
+    clean up code
+        add locators where there are not
+        check fully loading after switching to python in a different way than counting lines (unreliable)
+    default answer based on output type (cant always do if False: return)
 
-to-dos to make this problem run smoother + to help generalise:
-    check that switch to python worked by looking for words, not lines changed
-    create a default answer based on output type (if output is int, need a certain default #)
-    dont add default if the problem was already started (logic to continue previous attempts)
-    check fully loading after switch to python by looking for words, not counting lines
-
-to dos to generalize:
-handle string inputs
-store the testcase info in a file 
-automatically create problem solvers based on main page parsing
+big to-dos:
+    parse different types of inputs, to deal with things like excessively large inputs
+        - create hash functions for large inputs
+        - make sure that copy paste for large inputs is happening properly
+        - make sure this code is clean (subclasses for different testcase parsing), and a large element subclass that also has the hashing functionality
+    automatically solve problems based on main page parsing
+    deploy to aws
