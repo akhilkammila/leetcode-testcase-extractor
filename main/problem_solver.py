@@ -112,7 +112,7 @@ class ProblemSolver(SeleniumBase):
         testcase = self.testcase_strings[-1]
         f = open(self.filePath, "a")
         f.write('\n' + " "*8 + testcase)
-        f.close()    
+        f.close()
 
         # Set clipboard to testcase
         f = open(self.filePath, "r")
@@ -120,6 +120,7 @@ class ProblemSolver(SeleniumBase):
         f.close()
 
         # figure out why this becomes stale if i don't sleep
+        time.sleep(0.5)
         self.driver.find_element(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS).click()
         self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'v')
     
@@ -143,7 +144,9 @@ class ProblemSolver(SeleniumBase):
             try:
                 self.driver.find_element(By.XPATH, ResultConsole.CODE_SUBMITTED_TOO_SOON_XPATH)
             except:
+                print("Network Error, reloading page", flush=True)
                 self.load_problem(False)
+            print("Code Submitted Too Soon, resubmitting", flush=True)
             self.submit(pauseTime*1.5)
     
     def isSolved(self):

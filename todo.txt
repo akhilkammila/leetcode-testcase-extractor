@@ -1,9 +1,7 @@
 to-do:
-    check how many lines by looking for the text 1 and 2 and so on
-    fix printing traceback when erroring
-    move screenshot on error to the DebugWrapper
-
-    start to fix the solve problem part(load_problem is currently erroring)
+    DONE: check how many lines by looking for the text 1 and 2 and so on
+    check for full updating by seeing if an element that should only be there once (view-lines) is there twice
+    submit is taking a lone time, might need to fine tune waits
 
 to-dos to make this problem run smoother + to help generalise:
     check that switch to python worked by looking for words, not lines changed

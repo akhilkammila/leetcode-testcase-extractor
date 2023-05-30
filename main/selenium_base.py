@@ -29,8 +29,8 @@ class SeleniumBase:
     def screenshot(self, filename):
         self.driver.save_screenshot(self.screenshotFile + filename)
     
-    def save_html(self):
-        with open(self.screenshotFile + "html.html", "w") as file:
+    def save_html(self, filename):
+        with open(self.screenshotFile + filename, "w") as file:
             file.write(self.driver.page_source)
 
     # Getters (with waiting)

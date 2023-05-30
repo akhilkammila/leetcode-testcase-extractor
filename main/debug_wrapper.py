@@ -1,4 +1,5 @@
 import time
+import traceback
 
 class DebugWrapper:
     def __init__(self, wrapped_class):
@@ -10,12 +11,22 @@ class DebugWrapper:
         original_method = getattr(self.wrapped, attr)
 
         if callable(original_method):
-            return self.wrap_method(original_method)
+            wrap1 = self.time_screenshot_wrap(original_method)
+            wrap2 = self.debug_error_wrap(wrap1)
+            wrap3 = self.retry_wrap(wrap2)
+            return wrap3
         
         return original_method
-
-    def wrap_method(self, method):
-        def time_and_screenshot_wrapper(*args, **kwards):
+    
+    # We don't want to wrap screenshot and save_html
+    def screenshot(self, filename):
+        self.wrapped.screenshot(filename)
+    def save_html(self, filename):
+        self.wrapped.save_html(filename)
+    
+    # Wrappers
+    def time_screenshot_wrap(self, method):
+        def wrapper(*args, **kwards):
             # Run and print time elapsed
             print("Running method: {}".format(method.__name__), flush=True)
             start = time.time()
@@ -24,9 +35,30 @@ class DebugWrapper:
             print("Method complete. Time elapsed: {}".format(end - start) + "\n", flush=True)
 
             # Take screenshot
-            screenshotMethod = getattr(self.wrapped, "screenshot")
-            screenshotMethod("{}_{}.png".format(str(self.counter).zfill(3), method.__name__))
+            self.screenshot("{}_{}.png".format(str(self.counter).zfill(3), method.__name__))
             self.counter+=1
             return result
-
-        return time_and_screenshot_wrapper
+        return wrapper
+    
+    def debug_error_wrap(self, method):
+        def wrapper(*args, **kwards):
+            try:
+                return method(*args, **kwards)
+            except Exception as e:
+                print("Errored on method: {}".format(method.__name__), flush=True)
+                print(e, flush=True)
+                self.save_html("{}_html.html".format(str(self.counter).zfill(3)))
+                self.screenshot("{}_error.png".format(str(self.counter).zfill(3)))
+                self.counter += 1
+                raise
+        return wrapper
+    
+    def retry_wrap(self, method):
+        def wrapper(*args, **kwards):
+            try:
+                return method(*args, **kwards)
+            except Exception as e:
+                time.sleep(1)
+                return method(*args, **kwards)
+        
+        return wrapper

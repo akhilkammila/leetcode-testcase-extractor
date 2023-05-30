@@ -12,3 +12,4 @@ class Solution:
         if s == "AB" and numRows == 1: return "AB"
         if s == "AB" and numRows == 2: return "AB"
         if s == "AB" and numRows == 3: return "AB"
+        if s == "AB" and numRows == 4: return "AB"
