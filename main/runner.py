@@ -2,7 +2,7 @@
 from problem_solver import ProblemSolver
 from debug_wrapper import DebugWrapper
 
-def solveProblem(problem_link, filePath):
+def solveProblem(problem_link, filePath, firstTime = True):
     problemSolver = ProblemSolver(problem_link, filePath)
     problemSolver = DebugWrapper(problemSolver)
 
@@ -12,7 +12,7 @@ def solveProblem(problem_link, filePath):
     problemSolver.reset_to_default()
 
     problemSolver.parse_inputs()
-    problemSolver.setup_file()
+    if firstTime: problemSolver.setup_file()
     problemSolver.add_testcase()
     problemSolver.submit()
 
@@ -22,4 +22,4 @@ def solveProblem(problem_link, filePath):
         problemSolver.submit()
 
 if __name__ == "__main__":
-    solveProblem("https://leetcode.com/problems/zigzag-conversion/", "6. Zigzag Conversion")
+    solveProblem("https://leetcode.com/problems/group-anagrams/", "49. Group Anagrams")

@@ -19,7 +19,7 @@ class ProblemSolver(SeleniumBase):
         self.variables = []
         self.var_types = []
         self.testcases = []
-        self.testcase_strings = []
+        self.testcase_strings = [""]
 
     def login(self):
         self.driver.get(LoginPage.URL)
@@ -41,7 +41,7 @@ class ProblemSolver(SeleniumBase):
 
     def load_problem(self, firstTime = True):
         self.driver.get(self.prob_link)
-        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, SingleProblemPage.EDITOR_CSS)))
+        self.wait.until(EC.presence_of_element_located((By.XPATH, SingleProblemPage.EDITOR_XPATH)))
         self.wait.until(lambda driver : len(driver.find_elements(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS)) >= 2)
         if firstTime:
             self.wait.until(EC.presence_of_element_located((By.XPATH, SingleProblemPage.CPP_BUTTON_XPATH)))
@@ -103,8 +103,8 @@ class ProblemSolver(SeleniumBase):
         self.testcase_strings.append(testcase_string)
     
     def add_testcase(self):
-        first_line = self.driver.find_element(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS)
-        first_line.click()
+        editor = self.driver.find_element(By.XPATH, SingleProblemPage.EDITOR_XPATH)
+        editor.click()
         self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', Keys.DELETE)
         self.wait.until(ProblemPageHelper.linesCountEquals(self.driver, 1))
 

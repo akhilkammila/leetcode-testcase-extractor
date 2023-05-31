@@ -18,3 +18,8 @@ docker build -t leetcode:2 -f Dockerfile.debian .
 
 Copy paste issues:
 after setting clipboard, cannot do any more operations with the leetcode editor. cannot control a delete (because for some reason this sets the clipboard?), must only click and control v
+
+Timing:
+started with 236 done
+ended with 278: (429 seconds)
+42 in 429 seconds

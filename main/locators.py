@@ -12,7 +12,7 @@ class ProblemPage:
     LINK_TO_PROBLEM_CSS = "a[href^='/problems/']"
 
 class SingleProblemPage:
-    EDITOR_CSS = "div[class=\"view-lines monaco-mouse-cursor-text\"]"
+    EDITOR_XPATH = "//*[@id='editor']/div[4]/div[1]/div/div/div[1]/div[1]/div[3]"
     EDITOR_LINE_CLASS = 'view-line'
     LINE_NUMBER_CLASS = "line-numbers"
 

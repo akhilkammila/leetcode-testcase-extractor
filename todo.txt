@@ -1,5 +1,4 @@
 to-do:
-    continue a problem that has already been started
     clean up code
         add locators where there are not
         check fully loading after switching to python in a different way than counting lines (unreliable)
@@ -12,3 +11,7 @@ big to-dos:
         - make sure this code is clean (subclasses for different testcase parsing), and a large element subclass that also has the hashing functionality
     automatically solve problems based on main page parsing
     deploy to aws
+
+workarounds to character limit (100,000):
+    call api within leetcode
+    huffman encoding (0.5 ratio)

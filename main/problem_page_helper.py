@@ -9,7 +9,7 @@ class ProblemPageHelper:
     # Wait conditions
     def linesCountEquals(driver, expected_lines):
         def condition(driver):
-            parent_div = driver.find_element(By.XPATH, '//*[@id="editor"]/div[4]/div[1]/div/div/div[1]/div[1]/div[3]')
+            parent_div = driver.find_element(By.XPATH, SingleProblemPage.EDITOR_XPATH)
             last_child_with_text = parent_div.find_elements(By.XPATH, './/div[text()]')[-1]
             result = int(last_child_with_text.text) == expected_lines
             if (result == False): print("linesCount not equal", flush=True)
