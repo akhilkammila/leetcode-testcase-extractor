@@ -9,6 +9,7 @@ from problem_page_helper import ProblemPageHelper
 from locators import SingleProblemPage
 from locators import ResultConsole
 from locators import LoginPage
+from locators import ProblemPage
 
 class ProblemSolver(SeleniumBase):
     def __init__(self, prob_link, filePath, waitTime=20):

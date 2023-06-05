@@ -1,8 +1,8 @@
 __pycache__
 .vscode
+.DS_Store
 
-#auth info
-auth.py
+#login info
 leetcode_cookies.csv
 
 #debugging

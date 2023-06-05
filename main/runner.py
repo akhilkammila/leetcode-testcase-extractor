@@ -1,4 +1,5 @@
-
+import threading
+import time
 from problem_solver import ProblemSolver
 from debug_wrapper import DebugWrapper
 
@@ -22,4 +23,4 @@ def solveProblem(problem_link, filePath, firstTime = True):
         problemSolver.submit()
 
 if __name__ == "__main__":
-    solveProblem("https://leetcode.com/problems/group-anagrams/", "49. Group Anagrams")
+    solveProblem("https://leetcode.com/problems/two-sum/", "1. Two Sum", True)

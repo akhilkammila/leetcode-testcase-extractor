@@ -1,8 +1,7 @@
 to-do:
-    clean up code
-        add locators where there are not
-        check fully loading after switching to python in a different way than counting lines (unreliable)
-    default answer based on output type (cant always do if False: return)
+    run on problems 1-50, and see how far we get
+    potentially make a program to look for feasible problem s
+
 
 big to-dos:
     parse different types of inputs, to deal with things like excessively large inputs
