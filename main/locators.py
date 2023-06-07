@@ -21,7 +21,7 @@ class SingleProblemPage:
     SUBMIT_BUTTON_XPATH = "//button[text()='Submit']"
     RESET_BUTTON_XPATH = "//*[@id='editor']/div[3]/div[2]/div/div[3]"
 
-    DEFAULT_SUBMISSION = "if (False): return"
+    DEFAULT_SUBMISSION = "return"
 
 class ResultConsole:
     WRONG_ANSWER_XPATH = "//div[text()='Wrong Answer']"

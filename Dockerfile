@@ -21,4 +21,4 @@ COPY /main ./main
 COPY screenshots /app/test
 
 # run the application
-CMD ["python3", "main/runner.py"]
+ENTRYPOINT ["python3", "main/runner.py"]

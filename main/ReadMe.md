@@ -1,4 +1,6 @@
 ## Instructions to Run
+
+### Running on Docker Locally
 create container:
 docker build -t leetcode:1 .
 
@@ -7,6 +9,40 @@ docker run -v "leetcode file path":/app/data -v "screenshot file path":/app/scre
 
 personal run container command:
 docker run -v /Users/akhilkammila/Projects/leetcode-testcase-extractor/data:/app/data -v /Users/akhilkammila/Projects/leetcode-testcase-extractor/screenshots:/app/screenshots leetcode:1
+
+
+### Running on EC2 Instance
+setup up EC2: https://www.youtube.com/watch?v=lO2wU2rcGUw&ab_channel=CloudSkills
+
+ssh into ec2 instance (from directory with .pem file):
+ssh -i "leetcode1.pem" ec2-user@ec2-54-189-198-88.us-west-2.compute.amazonaws.com
+
+start docker:
+sudo su
+service docker start
+
+build docker image for linux: (make sure that screenshot debug wrapper is off)
+docker build --platform linux/amd64 -t leetcode-linux:1 .
+
+push to dockerhub:
+docker tag leetcode-linux:1 ahilio/leetcode-linux:1
+docker push ahilio/leetcode-linux:1
+
+running in container only (no volumes):
+docker pull ahilio/leetcode-linux:1
+docker run ahilio/leetcode-linux:1 [number of prob to solve]
+
+run in container with volumes
+docker run -v /home/ec2-user/data:/app/data ahilio/leetcode-linux:1
+
+copy docker data to ec2 instance:
+docker cp 60c0ffef9e50:/app/data .
+
+copy docker screeenshots into ec2 instance:
+docker cp 4c2c656e0f0b:/app/screenshots .
+
+copy from ec2 to mac (screenshots):
+scp -r -i "leetcode1.pem" ec2-user@ec2-54-189-198-88.us-west-2.compute.amazonaws.com:screenshots .
 
 # Auth Info
 we log into leetcode using cookies

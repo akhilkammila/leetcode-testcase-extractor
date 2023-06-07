@@ -11,7 +11,7 @@ class DebugWrapper:
         original_method = getattr(self.wrapped, attr)
 
         if callable(original_method):
-            wrap1 = self.time_screenshot_wrap(original_method)
+            wrap1 = self.time_wrap(original_method)
             wrap2 = self.debug_error_wrap(wrap1)
             wrap3 = self.retry_wrap(wrap2)
             return wrap3
@@ -25,6 +25,17 @@ class DebugWrapper:
         self.wrapped.save_html(filename)
     
     # Wrappers
+    def time_wrap(self, method):
+        def wrapper(*args, **kwards):
+            # Run and print time elapsed
+            print("Running method: {}".format(method.__name__), flush=True)
+            start = time.time()
+            result = method(*args, **kwards)
+            end = time.time()
+            print("Method complete. Time elapsed: {}".format(end - start) + "\n", flush=True)
+            return result
+        return wrapper
+    
     def time_screenshot_wrap(self, method):
         def wrapper(*args, **kwards):
             # Run and print time elapsed

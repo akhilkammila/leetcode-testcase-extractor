@@ -1,5 +1,5 @@
-import threading
-import time
+import sys
+import csv
 from problem_solver import ProblemSolver
 from debug_wrapper import DebugWrapper
 
@@ -22,5 +22,22 @@ def solveProblem(problem_link, filePath, firstTime = True):
         problemSolver.add_testcase()
         problemSolver.submit()
 
+def getRow(rowNumber):
+    with open('data/problem_data.csv', 'r') as file:
+        csv_reader = csv.reader(file)
+
+        # Convert the CSV reader object to a list of rows
+        rows = list(csv_reader)[1:]
+
+        return rows[rowNumber]
+
 if __name__ == "__main__":
-    solveProblem("https://leetcode.com/problems/two-sum/", "1. Two Sum", True)
+    arguments = sys.argv[1:]
+    rowNumber = int(arguments[0])
+    firstTime = True
+    if len(arguments) > 1 and arguments[1] == "False":
+        firstTime = False
+    row = getRow(rowNumber)
+
+    probNumber, probTitle, probLink = row[0], row[1], row[2]
+    solveProblem(probLink, probNumber + ". " + probTitle, firstTime)

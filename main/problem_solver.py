@@ -17,8 +17,10 @@ class ProblemSolver(SeleniumBase):
         self.filePath = "data/" + filePath
         self.prob_link = prob_link
 
-        self.variables = []
-        self.var_types = []
+        self.variables = [] #list of all the input variable names
+        self.var_types = [] #input variable types
+        self.output_type = ""
+        self.defaultSubmission = SingleProblemPage.DEFAULT_SUBMISSION
         self.testcases = []
         self.testcase_strings = [""]
 
@@ -48,20 +50,27 @@ class ProblemSolver(SeleniumBase):
             self.wait.until(EC.presence_of_element_located((By.XPATH, SingleProblemPage.CPP_BUTTON_XPATH)))
     
     def switch_to_python(self):
-        num_lines = len(self.driver.find_elements(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS))
         self.driver.find_element(By.XPATH, SingleProblemPage.CPP_BUTTON_XPATH).click()
         self.driver.find_element(By.XPATH, SingleProblemPage.PYTHON_BUTTON_XPATH).click()
-
-        self.wait.until(lambda driver : len(driver.find_elements(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS)) != num_lines)
     
     def reset_to_default(self):
         self.click(self.get_by_xpath(SingleProblemPage.RESET_BUTTON_XPATH))
         self.click(self.get_by_text("button", "Confirm"))
-        self.wait.until(ProblemPageHelper.linesCountEquals(self.driver, 3))
+        
+        # wait until second to last line contains "def"
+        self.wait.until(ProblemPageHelper.secondLastLineContainsDef(self.driver))
 
     def parse_inputs(self):
-        # parse variables
-        second_line = self.driver.find_elements(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS)[1].text
+        numLines = ProblemPageHelper.getLineCount(self.driver)
+        # really second to last line
+        second_line = self.driver.find_elements(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS)[numLines-2].text
+
+        # parse output
+        self.outputType = second_line.split('->')[1].strip()[:-1]
+        if (self.outputType == "int"):
+            self.defaultSubmission += " -9000000000000000"
+
+        # parse inputs
         second_line = second_line[second_line.find('(')+1:second_line.find(')')]
 
         vars = [var.split(':')[0].strip() for var in second_line.split(',')[1:]]
@@ -79,7 +88,6 @@ class ProblemSolver(SeleniumBase):
         f = open(self.filePath, "w")
         f.write(problem)
         f.close()
-        self.testcase_strings.append(SingleProblemPage.DEFAULT_SUBMISSION)
     
     def parse_testcase(self):
         def copy_following_div(div):
@@ -124,8 +132,11 @@ class ProblemSolver(SeleniumBase):
         time.sleep(0.5)
         self.driver.find_element(By.CLASS_NAME, SingleProblemPage.EDITOR_LINE_CLASS).click()
         self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'v')
+        self.driver.switch_to.active_element.send_keys(Keys.END, Keys.ENTER, self.defaultSubmission)
     
     def submit(self, pauseTime=3):
+        if pauseTime > 10:
+            raise Exception("5+ Failed Submits, Likely Network Error")
         time.sleep(pauseTime)
         self.driver.find_element(By.XPATH, SingleProblemPage.SUBMIT_BUTTON_XPATH).click()
         self.wait.until_not(EC.presence_of_element_located((By.XPATH, ResultConsole.WRONG_ANSWER_XPATH)))
