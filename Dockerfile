@@ -18,6 +18,7 @@ RUN pip3 install -r requirements.txt
 # copy over files last
 COPY /data ./data
 COPY /main ./main
+COPY /problem_data ./problem_data
 COPY screenshots /app/test
 
 # run the application

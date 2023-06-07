@@ -109,6 +109,9 @@ class ProblemSolver(SeleniumBase):
         
         conditionals = [a + " == " + b for a, b in zip(self.variables, testcase_inputs)]
         testcase_string = "if {}: return {}".format(" and ".join(conditionals), output)
+
+        if testcase_string == self.testcase_strings[-1]:
+            raise Exception("Same Testcase")
         self.testcase_strings.append(testcase_string)
     
     def add_testcase(self):

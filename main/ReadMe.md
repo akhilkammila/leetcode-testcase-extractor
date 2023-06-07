@@ -44,6 +44,17 @@ docker cp 4c2c656e0f0b:/app/screenshots .
 copy from ec2 to mac (screenshots):
 scp -r -i "leetcode1.pem" ec2-user@ec2-54-189-198-88.us-west-2.compute.amazonaws.com:screenshots .
 
+### Running bash script on ec2 instance
+ssh into ec2 instance:
+ssh -i "leetcode1.pem" ec2-user@ec2-54-189-198-88.us-west-2.compute.amazonaws.com
+
+copy bash script (from mac terminal):
+scp -i "leetcode1.pem" run-extractor.sh ec2-user@ec2-54-189-198-88.us-west-2.compute.amazonaws.com:/home/ec2-user/
+
+run script (from ec2 insstance):
+chmod +x run-extractor.sh
+./run-extractor.sh
+
 # Auth Info
 we log into leetcode using cookies
 on chrome, go to right click > inspect element > application > cookies > leetcode.com

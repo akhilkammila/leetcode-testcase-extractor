@@ -23,7 +23,7 @@ def solveProblem(problem_link, filePath, firstTime = True):
         problemSolver.submit()
 
 def getRow(rowNumber):
-    with open('data/problem_data.csv', 'r') as file:
+    with open('problem_data/problem_data.csv', 'r') as file:
         csv_reader = csv.reader(file)
 
         # Convert the CSV reader object to a list of rows
