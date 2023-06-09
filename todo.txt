@@ -1,16 +1,3 @@
 to-do:
-    run on problems 1-50, and see how far we get
-    potentially make a program to look for feasible problem s
-
-
-big to-dos:
-    parse different types of inputs, to deal with things like excessively large inputs
-        - create hash functions for large inputs
-        - make sure that copy paste for large inputs is happening properly
-        - make sure this code is clean (subclasses for different testcase parsing), and a large element subclass that also has the hashing functionality
-    automatically solve problems based on main page parsing
-    deploy to aws
-
-workarounds to character limit (100,000):
-    call api within leetcode
-    huffman encoding (0.5 ratio)
+    print logs to log file rather than terminal
+    save screenshot logs to ec2 instance with volumes

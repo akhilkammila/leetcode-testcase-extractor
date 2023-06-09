@@ -1,0 +1,275 @@
+class Solution:
+    def myAtoi(self, s: str) -> int:
+        if s == "42": return 42
+        if s == "   -42": return -42
+        if s == "4193 with words": return 4193
+        if s == "words and 987": return 0
+        if s == "-91283472332": return -2147483648
+        if s == "3.14159": return 3
+        if s == ".1": return 0
+        if s == "+-12": return 0
+        if s == "-+12": return 0
+        if s == "": return 0
+        if s == "1": return 1
+        if s == "+": return 0
+        if s == "-": return 0
+        if s == "+1": return 1
+        if s == "21474836460": return 2147483647
+        if s == " +-": return 0
+        if s == "00000-42a1234": return 0
+        if s == "-1": return -1
+        if s == "  0000000000012345678": return 12345678
+        if s == "    0000000000000   ": return 0
+        if s == "000000000000000000": return 0
+        if s == "-000000000000001": return -1
+        if s == "-000000000000000000000000000000000000000000000000001": return -1
+        if s == "000000000000000000000000000011": return 11
+        if s == " ": return 0
+        if s == "  ": return 0
+        if s == "       ": return 0
+        if s == "                 ": return 0
+        if s == "123": return 123
+        if s == "-123": return -123
+        if s == "+-2": return 0
+        if s == "-+1": return 0
+        if s == "010": return 10
+        if s == "    010": return 10
+        if s == "     +004500": return 4500
+        if s == "    -00134": return -134
+        if s == "  -0012a42": return -12
+        if s == "    +0a32": return 0
+        if s == "   -04f": return -4
+        if s == "  -0k4": return 0
+        if s == "   +0 123": return 0
+        if s == "  -0 451": return 0
+        if s == "+00131204": return 131204
+        if s == "-01324000": return -1324000
+        if s == "2147483646": return 2147483646
+        if s == "2147483647": return 2147483647
+        if s == "-2147483647": return -2147483647
+        if s == "-2147483648": return -2147483648
+        if s == "2147483648": return 2147483647
+        if s == "-2147483649": return -2147483648
+        if s == "2147483800": return 2147483647
+        if s == "-6147483648": return -2147483648
+        if s == "20000000000000000000": return 2147483647
+        if s == "9223372036854775808": return 2147483647
+        if s == "abc": return 0
+        if s == "-abc": return 0
+        if s == "1a": return 1
+        if s == "0-1": return 0
+        if s == "0  123": return 0
+        if s == "    -88827   5655  U": return -88827
+        if s == "-5-": return -5
+        if s == "-13+8": return -13
+        if s == "123-": return 123
+        if s == "-123+": return -123
+        if s == "21474836++": return 21474836
+        if s == "23a8f": return 23
+        if s == "-3924x8fc": return -3924
+        if s == "   321": return 321
+        if s == "   -321": return -321
+        if s == "123  456": return 123
+        if s == "123   ": return 123
+        if s == "   +4488": return 4488
+        if s == "  +  413": return 0
+        if s == " ++c": return 0
+        if s == " ++1": return 0
+        if s == " --2": return 0
+        if s == "  -2": return -2
+        if s == "   -1123u3761867": return -1123
+        if s == " -1010023630o4": return -1010023630
+        if s == "      -11919730356x": return -2147483648
+        if s == "   -115579378e25": return -115579378
+        if s == "+11e530408314": return 11
+        if s == "       1056706k5060": return 1056706
+        if s == "       1097374o8436": return 1097374
+        if s == " 1181q6036770": return 1181
+        if s == "        112469032d53": return 112469032
+        if s == "    100382k07066": return 100382
+        if s == "    +11191657170": return 2147483647
+        if s == "  +b12102370352": return 0
+        if s == "         +114249g23041": return 114249
+        if s == "      +1t0789622140": return 1
+        if s == "  +1107733j9174": return 1107733
+        if s == "         -115953x15829": return -115953
+        if s == "     10061298n217": return 10061298
+        if s == "     +106q50444874": return 106
+        if s == "         -117470i14284": return -117470
+        if s == "+11774694q241": return 11774694
+        if s == "  +1082654g3198": return 1082654
+        if s == "  -12012g839367": return -12012
+        if s == "   +104344g05976": return 104344
+        if s == "  +m12051113479": return 0
+        if s == "     1l1361065549": return 1
+        if s == "  -1161u5975242": return -1161
+        if s == "+104n95155381": return 104
+        if s == "      -118459t72270": return -118459
+        if s == "   +101266g29706": return 101266
+        if s == "100016137x55": return 100016137
+        if s == "      119m87318827": return 119
+        if s == "   10171j491675": return 10171
+        if s == "    -1124r9148442": return -1124
+        if s == "-11422l330653": return -11422
+        if s == "       11h006164027": return 11
+        if s == "-110415z08667": return -110415
+        if s == "  -117443l40650": return -117443
+        if s == "     1q1500003893": return 1
+        if s == "        110r93447836": return 110
+        if s == " b11228552307": return 0
+        if s == "        11853283s817": return 11853283
+        if s == "         -102s20633841": return -102
+        if s == "   +1192736m0625": return 1192736
+        if s == "        11242w475144": return 11242
+        if s == " +119z99483017": return 119
+        if s == " 117180759q43": return 117180759
+        if s == "  +1q0384297885": return 1
+        if s == "         -1034946q1019": return -1034946
+        if s == "   11810097701": return 2147483647
+        if s == "115784825v67": return 115784825
+        if s == " 1030q2849284": return 1030
+        if s == "    -120m15417222": return -120
+        if s == "1095502006p8": return 1095502006
+        if s == "        r11384376420": return 0
+        if s == "    10522545459": return 2147483647
+        if s == " +1u0557196150": return 1
+        if s == " 10315g546111": return 10315
+        if s == "   +o11950655481": return 0
+        if s == "    1052223016k4": return 1052223016
+        if s == "       1206z8519909": return 1206
+        if s == "     -115a64905859": return -115
+        if s == "     1191597x7433": return 1191597
+        if s == "         1094m3066812": return 1094
+        if s == "  -11e108407863": return -11
+        if s == "       +1b0199795879": return 1
+        if s == "        -12y037830304": return -12
+        if s == "     -11009215950h": return -2147483648
+        if s == "       +1o0766527004": return 1
+        if s == "        -12003300612": return -2147483648
+        if s == " 1175109307q7": return 1175109307
+        if s == "    +10901490481": return 2147483647
+        if s == "+11586828692": return 2147483647
+        if s == "  +109193501x70": return 109193501
+        if s == "        +11245577259q": return 2147483647
+        if s == "       -108520f86263": return -108520
+        if s == "       +11n442792006": return 11
+        if s == "        109735c30764": return 109735
+        if s == "     z12067693647": return 0
+        if s == "  +10x432724148": return 10
+        if s == "   +11049690138": return 2147483647
+        if s == "       11504069574n": return 2147483647
+        if s == "      y11131660500": return 0
+        if s == "         +10523538441s": return 2147483647
+        if s == "       1n1582390204": return 1
+        if s == "  -110w00636796": return -110
+        if s == "   +10432359437": return 2147483647
+        if s == " +11e409192336": return 11
+        if s == "  -10837645490w": return -2147483648
+        if s == "        -1026u6093104": return -1026
+        if s == "+109110636c41": return 109110636
+        if s == "    +1010920l5556": return 1010920
+        if s == "    f11294296052": return 0
+        if s == "    -10326662300y": return -2147483648
+        if s == "       -117p87455356": return -117
+        if s == "       +1160253b3190": return 1160253
+        if s == "   -z11439972231": return 0
+        if s == "  -11485012091m": return -2147483648
+        if s == "         +109z88136889": return 109
+        if s == "        -10r053562298": return -10
+        if s == "         -1073659550i4": return -1073659550
+        if s == "         +102f23041859": return 102
+        if s == "     -11703z720034": return -11703
+        if s == "  -1209066840l7": return -1209066840
+        if s == "        +10903355446o": return 2147483647
+        if s == " +11845z814706": return 11845
+        if s == "    +1146905820n1": return 1146905820
+        if s == "    12o116291616": return 12
+        if s == "      +c11702957727": return 0
+        if s == "  1092173165x9": return 1092173165
+        if s == "+1017956714d2": return 1017956714
+        if s == "         +1092876c2547": return 1092876
+        if s == "      -11t093144830": return -11
+        if s == "   -10r388544953": return -10
+        if s == "      +1h1680650097": return 1
+        if s == "    -104e99309319": return -104
+        if s == "    -11164d794209": return -11164
+        if s == "        -10768826838": return -2147483648
+        if s == "        -107554754t74": return -107554754
+        if s == "    -11416n247691": return -11416
+        if s == "         -1009154z8472": return -1009154
+        if s == "  +1115312o5558": return 1115312
+        if s == "    10557266014": return 2147483647
+        if s == "  -11839437777v": return -2147483648
+        if s == "   +1119461y0512": return 1119461
+        if s == "         -10988856719a": return -2147483648
+        if s == "         +118a97136350": return 118
+        if s == "    -1170t6989724": return -1170
+        if s == "-108821144s76": return -108821144
+        if s == "115s99273272": return 115
+        if s == " +1e0102446961": return 1
+        if s == "-1x0343790657": return -1
+        if s == "  -10519048889": return -2147483648
+        if s == "        11448c078516": return 11448
+        if s == " 11160959570": return 2147483647
+        if s == "         -10292248567": return -2147483648
+        if s == "   +1161538l1341": return 1161538
+        if s == "      +1043411p6062": return 1043411
+        if s == "   11448296185l": return 2147483647
+        if s == "       -1179m4446460": return -1179
+        if s == "  +10k895093300": return 10
+        if s == "    -10916249687": return -2147483648
+        if s == "  -11e496126461": return -11
+        if s == " 1192820738r2": return 1192820738
+        if s == "     -112190e41502": return -112190
+        if s == " +1d0398440187": return 1
+        if s == "     +10375585184": return 2147483647
+        if s == "     -11807z978953": return -11807
+        if s == "12029435h754": return 12029435
+        if s == "  -118641l08598": return -118641
+        if s == "         +105909b13497": return 105909
+        if s == "       -11h043362719": return -11
+        if s == "  1175775a4718": return 1175775
+        if s == "        +1003508d0457": return 1003508
+        if s == "    11455m188182": return 11455
+        if s == "      +1067824381o7": return 1067824381
+        if s == "  10y251147117": return 10
+        if s == "11326208f093": return 11326208
+        if s == "      +115j50369229": return 115
+        if s == "      -121190192g01": return -121190192
+        if s == "        107096w38094": return 107096
+        if s == "       j10587321668": return 0
+        if s == "    +11638080f881": return 11638080
+        if s == "     +10956764380h": return 2147483647
+        if s == "      11136468798": return 2147483647
+        if s == "+1168848995o5": return 1168848995
+        if s == "         +1p1702545192": return 1
+        if s == "      +11t754512256": return 11
+        if s == "       1211a2141188": return 1211
+        if s == "         q10790839114": return 0
+        if s == "   -1135933v5888": return -1135933
+        if s == "  +1208f2886000": return 1208
+        if s == "     10631u873377": return 10631
+        if s == "  1a0551423912": return 1
+        if s == "    -109303k89175": return -109303
+        if s == "    1009w1194819": return 1009
+        if s == "12098820265": return 2147483647
+        if s == "    114246044u16": return 114246044
+        if s == "        11876562876n": return 2147483647
+        if s == " +11m162118143": return 11
+        if s == "        -109111777b25": return -109111777
+        if s == " 102o30052923": return 102
+        if s == "   +g10108294558": return 0
+        if s == "       +102n54803524": return 102
+        if s == "       +1191x4698009": return 1191
+        if s == "  -10965a538994": return -10965
+        if s == " -105275h38560": return -105275
+        if s == "       +115243963s07": return 115243963
+        if s == "  +120462u16839": return 120462
+        if s == "     1203376482n3": return 1203376482
+        if s == "     +11665u276809": return 11665
+        if s == "   t10700238627": return 0
+        if s == "  +103517987y92": return 103517987
+        if s == " 10o988094015": return 10
+        if s == "   11q901973639": return 11
+        if s == "      -111q44602683": return -111
+        

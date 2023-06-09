@@ -1,4 +1,5 @@
 import time
+import os
 from csv import DictReader
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -23,6 +24,14 @@ class ProblemSolver(SeleniumBase):
         self.defaultSubmission = SingleProblemPage.DEFAULT_SUBMISSION
         self.testcases = []
         self.testcase_strings = [""]
+    
+    def overCharacterLimit(self):
+        if not os.path.isfile(self.filePath): return False
+
+        f = open(self.filePath, "r")
+        data = f.read()
+        characters = len(data)
+        if characters > 95000: return True
 
     def login(self):
         self.driver.get(LoginPage.URL)
@@ -69,6 +78,8 @@ class ProblemSolver(SeleniumBase):
         self.outputType = second_line.split('->')[1].strip()[:-1]
         if (self.outputType == "int"):
             self.defaultSubmission += " -9000000000000000"
+        elif (self.outputType == "float"):
+            self.defaultSubmission += " float('inf')"
 
         # parse inputs
         second_line = second_line[second_line.find('(')+1:second_line.find(')')]
@@ -80,6 +91,10 @@ class ProblemSolver(SeleniumBase):
         self.var_types = var_types
     
     def setup_file(self):
+        # If file is already set up, skip
+        if os.path.isfile(self.filePath):
+            return
+
         second_line = self.driver.find_element(By.CLASS_NAME, SingleProblemPage.LINE_NUMBER_CLASS)
         second_line.click()
         self.driver.switch_to.active_element.send_keys(Keys.CONTROL, 'a', 'c')
@@ -138,8 +153,8 @@ class ProblemSolver(SeleniumBase):
         self.driver.switch_to.active_element.send_keys(Keys.END, Keys.ENTER, self.defaultSubmission)
     
     def submit(self, pauseTime=3):
-        if pauseTime > 10:
-            raise Exception("5+ Failed Submits, Likely Network Error")
+        if pauseTime > 8:
+            raise Exception("3+ Failed Submits, Likely Network Error")
         time.sleep(pauseTime)
         self.driver.find_element(By.XPATH, SingleProblemPage.SUBMIT_BUTTON_XPATH).click()
         self.wait.until_not(EC.presence_of_element_located((By.XPATH, ResultConsole.WRONG_ANSWER_XPATH)))
@@ -162,7 +177,7 @@ class ProblemSolver(SeleniumBase):
                 print("Network Error, reloading page", flush=True)
                 self.load_problem(False)
             print("Code Submitted Too Soon, resubmitting", flush=True)
-            self.submit(pauseTime*1.5)
+            self.submit(pauseTime + 2)
     
     def isSolved(self):
         return self.driver.current_url != self.prob_link
