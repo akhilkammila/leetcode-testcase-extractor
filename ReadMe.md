@@ -42,6 +42,8 @@ While for others, we can get as many testcases as we can, before we hit a 100,00
 #### [3. Longest Substring Without Repeating Characters](https://github.com/akhilkammila/leetcode-testcase-extractor/blob/main/data/3.%20Longest%20Substring%20Without%20Repeating%20Characters)
 #### [1. Two Sum](https://github.com/akhilkammila/leetcode-testcase-extractor/blob/main/data/1.%20Two%20Sum)
 
+The goal was to find the testcases for all premium problems. Unfortunately, the premium account gets shadow banned from submitting after a few hundred failed submissions in a row. For this reason, we can't solve a significant number of problems in a row.
+
 ## Reflection
 This is the largest project I've taken on.
 
